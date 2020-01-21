@@ -10,7 +10,10 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
     main: {
-        padding: "40px"
+        padding: "40px",
+        minHeight: "100vh",
+        maxWidth: "2000px",
+        backgroundColor: "#252834"
     }
 };
 class Home extends Component {

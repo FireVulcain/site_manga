@@ -17,11 +17,20 @@ const styles = {
     newChapter: {
         display: "flex",
         alignItems: "center",
-        marginBottom: "10px"
+        marginBottom: "10px",
+        background: "#3d485a",
+        borderRadius: "100px 5px 5px 100px;",
+        textDecoration: "none",
+        color: "#fff"
     },
     newChapterImg: {
         borderRadius: "100px",
         marginRight: "15px"
+    },
+    title: {
+        color: "#fff",
+        margin: "1em 0",
+        textTransform: "uppercase"
     }
 };
 
@@ -65,7 +74,7 @@ class LastestRelease extends Component {
         return (
             <Box>
                 <Grid item md={12}>
-                    <Typography variant="h5" component="h3">
+                    <Typography variant="h5" component="h3" className={classes.title}>
                         Les dernières sorties
                     </Typography>
                 </Grid>

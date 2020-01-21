@@ -41,34 +41,37 @@ class MangaCategory extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mangaId: "",
             listChapters: []
         };
     }
     componentDidMount() {
+        const pathName = this.props.location.pathname.substr(1);
         const db = firebase.firestore();
-        const { mangaId } = this.props.location.state;
+        let mangaId = "";
         let mangas = {};
         let chapters = {};
+
         db.collection("/mangas")
+            .where("path", "==", pathName)
             .get()
             .then((results) => {
                 results.forEach((doc) => {
+                    mangaId = doc.id;
                     mangas[doc.id] = doc.data();
                 });
-            });
-
-        db.collection("/chapters")
-            .where("mangaId", "==", mangaId)
-            .get()
-            .then((docSnaps) => {
-                docSnaps.forEach((doc) => {
-                    chapters[doc.id] = doc.data();
-                    chapters[doc.id].title = mangas[doc.data().mangaId].title;
-                    chapters[doc.id].path = mangas[doc.data().mangaId].path;
-                    chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
-                });
-                this.setState({ listChapters: chapters });
+                return db
+                    .collection("/chapters")
+                    .where("mangaId", "==", mangaId)
+                    .get()
+                    .then((snapshot) => {
+                        snapshot.forEach((doc) => {
+                            chapters[doc.id] = doc.data();
+                            chapters[doc.id].title = mangas[doc.data().mangaId].title;
+                            chapters[doc.id].path = mangas[doc.data().mangaId].path;
+                            chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
+                        });
+                        this.setState({ listChapters: chapters });
+                    });
             });
     }
     render() {
@@ -77,7 +80,7 @@ class MangaCategory extends Component {
             <Box>
                 <Grid item md={12}>
                     <Typography variant="h5" component="h3" className={classes.title}>
-                        Les dernières sorties
+                        Liste des chapitres
                     </Typography>
                 </Grid>
                 <Grid item md={12}>
@@ -85,10 +88,7 @@ class MangaCategory extends Component {
                         return (
                             <Link
                                 key={i}
-                                to={{
-                                    pathname: listChapter.path,
-                                    state: { mangaId: listChapter.mangaId }
-                                }}
+                                to={listChapter.path + "/" + listChapter.chapter}
                                 className={classes.newChapter}
                             >
                                 <img

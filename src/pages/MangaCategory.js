@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-// Firebase
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "../../config/firebaseConfig";
+import "../config/firebaseConfig";
 
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
@@ -38,16 +37,17 @@ const styles = {
         textTransform: "uppercase"
     }
 };
-
-class LastestRelease extends Component {
-    constructor() {
-        super();
+class MangaCategory extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
-            releases: []
+            mangaId: "",
+            listChapters: []
         };
     }
-    componentDidMount = () => {
+    componentDidMount() {
         const db = firebase.firestore();
+        const { mangaId } = this.props.location.state;
         let mangas = {};
         let chapters = {};
         db.collection("/mangas")
@@ -59,7 +59,7 @@ class LastestRelease extends Component {
             });
 
         db.collection("/chapters")
-            .limit(20)
+            .where("mangaId", "==", mangaId)
             .get()
             .then((docSnaps) => {
                 docSnaps.forEach((doc) => {
@@ -68,10 +68,9 @@ class LastestRelease extends Component {
                     chapters[doc.id].path = mangas[doc.data().mangaId].path;
                     chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
                 });
-                this.setState({ releases: chapters });
+                this.setState({ listChapters: chapters });
             });
-    };
-
+    }
     render() {
         const { classes } = this.props;
         return (
@@ -82,27 +81,27 @@ class LastestRelease extends Component {
                     </Typography>
                 </Grid>
                 <Grid item md={12}>
-                    {Object.values(this.state.releases).map((release, i) => {
+                    {Object.values(this.state.listChapters).map((listChapter, i) => {
                         return (
                             <Link
                                 key={i}
                                 to={{
-                                    pathname: release.path,
-                                    state: { mangaId: release.mangaId }
+                                    pathname: listChapter.path,
+                                    state: { mangaId: listChapter.mangaId }
                                 }}
                                 className={classes.newChapter}
                             >
                                 <img
-                                    src={release.mangaImage}
+                                    src={listChapter.mangaImage}
                                     alt=""
                                     className={classes.newChapterImg}
                                 />
                                 <Box>
                                     <Typography variant="body1" component="p">
-                                        {release.title} {release.chapter}
+                                        {listChapter.title} {listChapter.chapter}
                                     </Typography>
                                     <Typography variant="body1" component="p">
-                                        {release.titleChapter}
+                                        {listChapter.titleChapter}
                                     </Typography>
                                 </Box>
                             </Link>
@@ -113,9 +112,7 @@ class LastestRelease extends Component {
         );
     }
 }
-
-LastestRelease.propTypes = {
+MangaCategory.propTypes = {
     classes: PropTypes.object.isRequired
 };
-
-export default withStyles(styles)(LastestRelease);
+export default withStyles(styles)(MangaCategory);

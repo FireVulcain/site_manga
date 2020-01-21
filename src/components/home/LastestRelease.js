@@ -21,7 +21,12 @@ const styles = {
         background: "#3d485a",
         borderRadius: "100px 5px 5px 100px;",
         textDecoration: "none",
-        color: "#fff"
+        color: "#fff",
+        transitionDuration: "0.2s",
+
+        "&:hover": {
+            background: "#1e2834"
+        }
     },
     newChapterImg: {
         borderRadius: "100px",

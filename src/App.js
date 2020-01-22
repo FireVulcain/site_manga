@@ -17,6 +17,7 @@ class App extends Component {
                     <Route exact path="/planning" />
                     <Route exact path="/mangas" />
                     <Route exact path="/:manga_name" component={MangaCategory} />
+                    <Route exact path="/:manga_name/:nb_chapter" />
                 </Switch>
             </Router>
         );

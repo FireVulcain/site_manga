@@ -30,7 +30,8 @@ const styles = {
     },
     newChapterImg: {
         borderRadius: "100px",
-        marginRight: "15px"
+        marginRight: "15px",
+        maxWidth: "65px"
     },
     title: {
         color: "#fff",
@@ -65,7 +66,6 @@ class LastestRelease extends Component {
                 docSnaps.forEach((doc) => {
                     chapters[doc.id] = doc.data();
                     chapters[doc.id].title = mangas[doc.data().mangaId].title;
-                    chapters[doc.id].path = mangas[doc.data().mangaId].path;
                     chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
                 });
                 this.setState({ releases: chapters });
@@ -84,19 +84,8 @@ class LastestRelease extends Component {
                 <Grid item md={12}>
                     {Object.values(this.state.releases).map((release, i) => {
                         return (
-                            <Link
-                                key={i}
-                                to={{
-                                    pathname: release.path,
-                                    state: { mangaId: release.mangaId }
-                                }}
-                                className={classes.newChapter}
-                            >
-                                <img
-                                    src={release.mangaImage}
-                                    alt=""
-                                    className={classes.newChapterImg}
-                                />
+                            <Link key={i} to={release.mangaId} className={classes.newChapter}>
+                                <img src={release.mangaImage} alt="" className={classes.newChapterImg} />
                                 <Box>
                                     <Typography variant="body1" component="p">
                                         {release.title} {release.chapter}

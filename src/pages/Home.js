@@ -1,26 +1,15 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 //Component
 import LastestRelease from "./../components/home/LastestRelease";
 
 //Material-ui stuff
 import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
 
-const styles = {
-    main: {
-        padding: "40px",
-        minHeight: "100vh",
-        maxWidth: "2000px",
-        backgroundColor: "#252834"
-    }
-};
 class Home extends Component {
     render() {
-        const { classes } = this.props;
         return (
-            <Grid container className={classes.main}>
+            <Grid container className="main">
                 <Grid item md={12}>
                     <LastestRelease />
                 </Grid>
@@ -29,8 +18,4 @@ class Home extends Component {
     }
 }
 
-Home.propTypes = {
-    classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(Home);
+export default Home;

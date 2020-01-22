@@ -1,3 +1,6 @@
+body {
+    background: #252834;
+}
 .App {
     text-align: center;
 }
@@ -32,7 +35,6 @@
     padding: 40px;
     min-height: 100vh;
     max-width: 2000px;
-    background-color: #252834;
 }
 
 @keyframes App-logo-spin {

@@ -1,25 +1,32 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/storage";
 import "../config/firebaseConfig";
 
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
-const styles = {};
+const styles = {
+    page: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: "20px"
+    }
+};
 class MangaChapter extends Component {
     constructor(props) {
         super(props);
         this.state = {
             mangaId: this.props.match.params.manga_name,
             nbChapter: parseInt(this.props.match.params.nb_chapter),
-            chapterData: []
+            chapterData: [],
+            loading: true
         };
     }
     componentDidMount() {
@@ -49,9 +56,22 @@ class MangaChapter extends Component {
             });
     }
     render() {
-        console.log(this.state.chapterData);
         const { classes } = this.props;
-        return <h1>test</h1>;
+        return (
+            <Box>
+                {Object.values(this.state.chapterData).map((datas) => {
+                    if (datas.pages) {
+                        return datas.pages.map((page, i) => {
+                            return (
+                                <Box key={i} className={classes.page}>
+                                    <img src={page.pageImg} />;
+                                </Box>
+                            );
+                        });
+                    }
+                })}
+            </Box>
+        );
     }
 }
 MangaChapter.propTypes = {

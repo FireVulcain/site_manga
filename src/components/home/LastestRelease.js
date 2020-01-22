@@ -12,6 +12,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = {
     newChapter: {
@@ -26,6 +27,11 @@ const styles = {
 
         "&:hover": {
             background: "#1e2834"
+        },
+
+        "& a": {
+            color: "#fff",
+            textDecoration: "none"
         }
     },
     newChapterImg: {
@@ -37,6 +43,13 @@ const styles = {
         color: "#fff",
         margin: "1em 0",
         textTransform: "uppercase"
+    },
+    containerInfo: {
+        position: "relative"
+    },
+    loadingInfo: {
+        position: "absolute",
+        left: "50%"
     }
 };
 
@@ -44,7 +57,8 @@ class LastestRelease extends Component {
     constructor() {
         super();
         this.state = {
-            releases: []
+            releases: [],
+            loading: true
         };
     }
     componentDidMount = () => {
@@ -69,6 +83,7 @@ class LastestRelease extends Component {
                     chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
                 });
                 this.setState({ releases: chapters });
+                this.setState({ loading: false });
             });
     };
 
@@ -81,22 +96,26 @@ class LastestRelease extends Component {
                         Les dernières sorties
                     </Typography>
                 </Grid>
-                <Grid item md={12}>
-                    {Object.values(this.state.releases).map((release, i) => {
-                        return (
-                            <Link key={i} to={release.mangaId} className={classes.newChapter}>
-                                <img src={release.mangaImage} alt="" className={classes.newChapterImg} />
-                                <Box>
-                                    <Typography variant="body1" component="p">
-                                        {release.title} {release.chapter}
-                                    </Typography>
-                                    <Typography variant="body1" component="p">
-                                        {release.titleChapter}
-                                    </Typography>
-                                </Box>
-                            </Link>
-                        );
-                    })}
+                <Grid item md={12} className={classes.containerInfo}>
+                    {this.state.loading ? (
+                        <CircularProgress size={30} className={classes.loadingInfo} />
+                    ) : (
+                        Object.values(this.state.releases).map((release, i) => {
+                            return (
+                                <Link key={i} to={release.mangaId} className={classes.newChapter}>
+                                    <img src={release.mangaImage} alt="" className={classes.newChapterImg} />
+                                    <Box>
+                                        <Typography variant="body1" component="p">
+                                            {release.title} {release.chapter}
+                                        </Typography>
+                                        <Typography variant="body1" component="p">
+                                            {release.titleChapter}
+                                        </Typography>
+                                    </Box>
+                                </Link>
+                            );
+                        })
+                    )}
                 </Grid>
             </Box>
         );

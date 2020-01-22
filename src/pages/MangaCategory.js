@@ -13,8 +13,21 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = {
+    titlePage: {
+        color: "#fff",
+        margin: "1em 0",
+        textTransform: "uppercase"
+    },
+    containerInfo: {
+        position: "relative"
+    },
+    loadingInfo: {
+        position: "absolute",
+        left: "50%"
+    },
     newChapter: {
         display: "flex",
         alignItems: "center",
@@ -33,11 +46,6 @@ const styles = {
         borderRadius: "100px",
         marginRight: "15px",
         maxWidth: "65px"
-    },
-    title: {
-        color: "#fff",
-        margin: "1em 0",
-        textTransform: "uppercase"
     }
 };
 class MangaCategory extends Component {
@@ -46,7 +54,8 @@ class MangaCategory extends Component {
         this.state = {
             mangaId: this.props.match.params.manga_name,
             mangaInfo: [],
-            listChapters: []
+            listChapters: [],
+            loading: true
         };
     }
     componentDidMount() {
@@ -59,8 +68,8 @@ class MangaCategory extends Component {
             .get()
             .then((results) => {
                 mangas[results.id] = results.data();
-
                 this.setState({ mangaInfo: mangas });
+
                 return db
                     .collection("/chapters")
                     .where("mangaId", "==", this.state.mangaId)
@@ -73,6 +82,7 @@ class MangaCategory extends Component {
                             chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
                         });
                         this.setState({ listChapters: chapters });
+                        this.setState({ loading: false });
                     });
             });
     }
@@ -82,27 +92,31 @@ class MangaCategory extends Component {
             <Box className="main">
                 <Container maxWidth="lg">
                     <Grid item md={12}>
-                        <Typography variant="h5" component="h3" className={classes.title}>
+                        <Typography variant="h5" component="h3" className={classes.titlePage}>
                             Liste des chapitres
                         </Typography>
                     </Grid>
                     <Grid container spacing={5}>
-                        <Grid item md={8}>
-                            {Object.values(this.state.listChapters).map((listChapter, i) => {
-                                return (
-                                    <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className={classes.newChapter}>
-                                        <img src={listChapter.mangaImage} alt="" className={classes.newChapterImg} />
-                                        <Box>
-                                            <Typography variant="body1" component="p">
-                                                {listChapter.title} {listChapter.chapter}
-                                            </Typography>
-                                            <Typography variant="body1" component="p">
-                                                {listChapter.titleChapter}
-                                            </Typography>
-                                        </Box>
-                                    </Link>
-                                );
-                            })}
+                        <Grid item md={8} className={classes.containerInfo}>
+                            {this.state.loading ? (
+                                <CircularProgress size={30} className={classes.loadingInfo} />
+                            ) : (
+                                Object.values(this.state.listChapters).map((listChapter, i) => {
+                                    return (
+                                        <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className={classes.newChapter}>
+                                            <img src={listChapter.mangaImage} alt="" className={classes.newChapterImg} />
+                                            <Box>
+                                                <Typography variant="body1" component="p">
+                                                    {listChapter.title} {listChapter.chapter}
+                                                </Typography>
+                                                <Typography variant="body1" component="p">
+                                                    {listChapter.titleChapter}
+                                                </Typography>
+                                            </Box>
+                                        </Link>
+                                    );
+                                })
+                            )}
                         </Grid>
                         <Grid item md={4}>
                             <MangaInfo mangaInfo={this.state.mangaInfo} />

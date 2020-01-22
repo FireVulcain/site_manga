@@ -9,7 +9,6 @@ import "../config/firebaseConfig";
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
 
 const styles = {
     page: {
@@ -64,7 +63,7 @@ class MangaChapter extends Component {
                         return datas.pages.map((page, i) => {
                             return (
                                 <Box key={i} className={classes.page}>
-                                    <img src={page.pageImg} />;
+                                    <img src={page.pageImg} alt="page chapitre" />;
                                 </Box>
                             );
                         });

@@ -59,15 +59,13 @@ class MangaChapter extends Component {
         return (
             <Box>
                 {Object.values(this.state.chapterData).map((datas) => {
-                    if (datas.pages) {
-                        return datas.pages.map((page, i) => {
-                            return (
-                                <Box key={i} className={classes.page}>
-                                    <img src={page.pageImg} alt="page chapitre" />;
-                                </Box>
-                            );
-                        });
-                    }
+                    return datas.pages.map((page, i) => {
+                        return (
+                            <Box key={i} className={classes.page}>
+                                <img src={page.pageImg} alt="page chapitre" />;
+                            </Box>
+                        );
+                    });
                 })}
             </Box>
         );

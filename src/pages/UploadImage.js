@@ -10,13 +10,19 @@ import "../config/firebaseConfig";
 //Material UI
 import { withStyles } from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
+import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-const styles = (theme) => ({});
+const styles = (theme) => ({
+    option: {
+        cursor: "pointer"
+    }
+});
 class UploadImage extends Component {
     constructor(props) {
         super(props);
@@ -25,8 +31,9 @@ class UploadImage extends Component {
             images: null,
             url: [],
             selectManga: "",
-            selectChapter: null,
-            selectTitle: ""
+            selectChapter: "",
+            selectTitle: "",
+            loading: false
         };
     }
 
@@ -36,14 +43,8 @@ class UploadImage extends Component {
             this.setState(() => ({ images }));
         }
     };
-    handleSelectedManga = (e) => {
-        this.setState({ selectManga: e.target.value });
-    };
-    handleSelectedChapter = (e) => {
-        this.setState({ selectChapter: e.target.value });
-    };
-    handleSelectedTitle = (e) => {
-        this.setState({ selectTitle: e.target.value });
+    handleChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
     };
 
     handleUpload = () => {
@@ -52,35 +53,50 @@ class UploadImage extends Component {
         const promises = [];
         let url = [];
         let pathUploadImg = this.state.selectManga + "/" + this.state.selectChapter;
+
         if (this.state.selectManga && this.state.selectChapter) {
-            if (this.state.selectManga !== "default") {
-                Object.values(images).map((image) => {
-                    let uploadTask = firebase
-                        .storage()
-                        .ref(`${pathUploadImg}/${image.name}`)
-                        .put(image)
-                        .then((snap) => {
-                            return snap.ref.getDownloadURL();
+            this.setState({ loading: true });
+
+            Object.values(images).map((image, i) => {
+                let uploadTask = firebase
+                    .storage()
+                    .ref(`${pathUploadImg}/${image.name}`)
+                    .put(image)
+                    .then((snap) => {
+                        return snap.ref.getDownloadURL();
+                    })
+                    .then((downloadURL) => {
+                        url.push({ pageImg: downloadURL, pageNumber: i + 1 });
+                    });
+                return promises.push(uploadTask);
+            });
+
+            Promise.all(promises).then(() => {
+                url.sort((a, b) => (a.pageImg > b.pageImg ? 1 : b.pageImg > a.pageImg ? -1 : 0));
+                this.setState({ url: url }, () => {
+                    let newChapter = db.collection("chapters").doc();
+                    newChapter
+                        .set({
+                            chapter: parseInt(this.state.selectChapter),
+                            mangaId: this.state.selectManga,
+                            titleChapter: this.state.selectTitle,
+                            pageCount: this.state.url.length,
+                            pages: this.state.url
                         })
-                        .then((downloadURL) => {
-                            url.push(downloadURL);
+                        .then(() => {
+                            this.resetInput();
                         });
-                    return promises.push(uploadTask);
-                });
-            }
-        }
-        Promise.all(promises).then(() => {
-            this.setState({ url: url }, () => {
-                let newChapter = db.collection("chapters").doc();
-                newChapter.set({
-                    chapter: this.state.selectChapter,
-                    mangaId: this.state.selectManga,
-                    titleChapter: this.state.selectTitle,
-                    pageCount: this.state.url.length
                 });
             });
+        }
+    };
+
+    resetInput = () => {
+        this.setState({ images: null, url: [], selectManga: "", selectChapter: "", selectTitle: "", loading: false }, () => {
+            this.fileInput.value = "";
         });
     };
+
     componentDidMount() {
         const db = firebase.firestore();
         let mangas = {};
@@ -94,45 +110,46 @@ class UploadImage extends Component {
             });
     }
     render() {
+        const { classes } = this.props;
         return (
             <Box className="main">
-                <Box>
-                    <Select defaultValue="default" onChange={this.handleSelectedManga}>
-                        <MenuItem value="default">Choisir un manga</MenuItem>
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="selectManga">Choisir un manga</InputLabel>
+                    <Select native value={this.state.selectManga} onChange={this.handleChange} name="selectManga" id="selectManga">
+                        <option value=""></option>
                         {Object.entries(this.state.mangas).map((manga, i) => {
                             return (
-                                <MenuItem value={manga[0]} key={i}>
+                                <option value={manga[0]} key={i} className={classes.option}>
                                     {manga[1].title}
-                                </MenuItem>
+                                </option>
                             );
                         })}
                     </Select>
-                </Box>
+                </FormControl>
                 <Box>
                     <Input
                         color="primary"
                         type="text"
-                        onChange={this.handleSelectedTitle}
+                        value={this.state.selectTitle}
+                        onChange={this.handleChange}
                         placeholder="Titre du chapitre"
+                        name="selectTitle"
                     />
                 </Box>
                 <Box>
                     <Input
                         color="primary"
                         type="text"
-                        onChange={this.handleSelectedChapter}
+                        value={this.state.selectChapter}
+                        onChange={this.handleChange}
                         placeholder="Numéro du chapitre"
+                        name="selectChapter"
                     />
                 </Box>
                 <Box>
-                    <input type="file" onChange={this.handleImage} multiple />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<CloudUploadIcon />}
-                        onClick={this.handleUpload}
-                    >
-                        Upload
+                    <input type="file" onChange={this.handleImage} multiple ref={(ref) => (this.fileInput = ref)} />
+                    <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
+                        {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
                     </Button>
                 </Box>
             </Box>

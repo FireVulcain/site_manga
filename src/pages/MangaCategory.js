@@ -73,6 +73,7 @@ class MangaCategory extends Component {
                 return db
                     .collection("/chapters")
                     .where("mangaId", "==", this.state.mangaId)
+                    .orderBy("chapter", "desc")
                     .get()
                     .then((snapshot) => {
                         snapshot.forEach((doc) => {

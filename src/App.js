@@ -7,7 +7,7 @@ import Navbar from "./components/layouts/Navbar";
 import Home from "./pages/Home";
 import MangaCategory from "./pages/MangaCategory";
 import MangaChapter from "./pages/MangaChapter";
-import UploadImage from "./pages/UploadImage";
+import UploadChapter from "./pages/UploadChapter";
 
 class App extends Component {
     render() {
@@ -18,7 +18,7 @@ class App extends Component {
                     <Route exact path="/" component={Home} />
                     <Route exact path="/planning" />
                     <Route exact path="/mangas" />
-                    <Route exact path="/upload_image" component={UploadImage} />
+                    <Route exact path="/upload_chapter" component={UploadChapter} />
                     <Route exact path="/:manga_name" component={MangaCategory} />
                     <Route exact path="/:manga_name/:nb_chapter" component={MangaChapter} />
                 </Switch>

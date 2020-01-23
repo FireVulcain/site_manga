@@ -20,10 +20,20 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = (theme) => ({
     option: {
-        cursor: "pointer"
+        cursor: "pointer",
+        color: "#000"
+    },
+    select: {
+        color: "#fff"
+    },
+    input: {
+        color: "#fff",
+        "& ::placeholder": {
+            opacity: 0.8
+        }
     }
 });
-class UploadImage extends Component {
+class UploadChapter extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -114,8 +124,17 @@ class UploadImage extends Component {
         return (
             <Box className="main">
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="selectManga">Choisir un manga</InputLabel>
-                    <Select native value={this.state.selectManga} onChange={this.handleChange} name="selectManga" id="selectManga">
+                    <InputLabel className={classes.select} htmlFor="selectManga">
+                        Choisir un manga
+                    </InputLabel>
+                    <Select
+                        className={classes.select}
+                        native
+                        value={this.state.selectManga}
+                        onChange={this.handleChange}
+                        name="selectManga"
+                        id="selectManga"
+                    >
                         <option value=""></option>
                         {Object.entries(this.state.mangas).map((manga, i) => {
                             return (
@@ -128,6 +147,7 @@ class UploadImage extends Component {
                 </FormControl>
                 <Box>
                     <Input
+                        className={classes.input}
                         color="primary"
                         type="text"
                         value={this.state.selectTitle}
@@ -138,6 +158,7 @@ class UploadImage extends Component {
                 </Box>
                 <Box>
                     <Input
+                        className={classes.input}
                         color="primary"
                         type="text"
                         value={this.state.selectChapter}
@@ -147,7 +168,7 @@ class UploadImage extends Component {
                     />
                 </Box>
                 <Box>
-                    <input type="file" onChange={this.handleImage} multiple ref={(ref) => (this.fileInput = ref)} />
+                    <input className={classes.input} type="file" onChange={this.handleImage} multiple ref={(ref) => (this.fileInput = ref)} />
                     <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
                         {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
                     </Button>
@@ -156,7 +177,7 @@ class UploadImage extends Component {
         );
     }
 }
-UploadImage.propTypes = {
+UploadChapter.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(UploadImage);
+export default withStyles(styles)(UploadChapter);

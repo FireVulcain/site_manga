@@ -75,6 +75,7 @@ class LastestRelease extends Component {
 
         db.collection("/chapters")
             .limit(20)
+            .orderBy("chapter", "desc")
             .get()
             .then((docSnaps) => {
                 docSnaps.forEach((doc) => {

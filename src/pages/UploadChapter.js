@@ -18,7 +18,7 @@ import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const styles = (theme) => ({
+const styles = {
     option: {
         cursor: "pointer",
         color: "#000"
@@ -32,7 +32,7 @@ const styles = (theme) => ({
             opacity: 0.8
         }
     }
-});
+};
 class UploadChapter extends Component {
     constructor(props) {
         super(props);

@@ -33,13 +33,51 @@ body {
 
 .main {
     padding: 40px;
-    min-height: 100vh;
     max-width: 2000px;
+}
+
+.newChapter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    background: #3d485a;
+    border-radius: 100px 5px 5px 100px;
+    text-decoration: none;
+    color: #fff;
+    transition-duration: 0.2s;
+    -webkit-border-radius: 100px 5px 5px 100px;
+    -moz-border-radius: 100px 5px 5px 100px;
+    -ms-border-radius: 100px 5px 5px 100px;
+    -o-border-radius: 100px 5px 5px 100px;
+}
+.newChapter:hover {
+    background: #1e2834;
+}
+.newChapterImg {
+    border-radius: 100px;
+    margin-right: 15px;
+    max-width: 65px;
+}
+body .titlePage {
+    color: #fff;
+    margin: 1em 0;
+    text-transform: uppercase;
+}
+.containerInfo {
+    position: relative;
+}
+.loadingInfo {
+    position: absolute;
+    left: 50%;
 }
 
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
     }
     to {
         transform: rotate(360deg);

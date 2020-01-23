@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -18,14 +19,15 @@ const styles = {
         marginBottom: "20px"
     }
 };
-class MangaChapter extends Component {
+class MangaReadChapter extends Component {
     constructor(props) {
         super(props);
         this.state = {
             mangaId: this.props.match.params.manga_name,
             nbChapter: parseInt(this.props.match.params.nb_chapter),
             chapterData: [],
-            loading: true
+            loading: true,
+            wrongSearchManga: false
         };
     }
     componentDidMount() {
@@ -37,26 +39,32 @@ class MangaChapter extends Component {
             .doc(this.state.mangaId)
             .get()
             .then((results) => {
-                mangas[results.id] = results.data();
-
-                this.setState({ mangaInfo: mangas });
-                return db
-                    .collection("/chapters")
-                    .where("mangaId", "==", this.state.mangaId)
-                    .where("chapter", "==", this.state.nbChapter)
-                    .get()
-                    .then((snapshot) => {
-                        snapshot.forEach((doc) => {
-                            chapters[doc.id] = doc.data();
-                            chapters[doc.id].title = mangas[doc.data().mangaId].title;
-                        });
-                        this.setState({ chapterData: chapters });
+                if (results.exists) {
+                    mangas[results.id] = results.data();
+                    this.setState({ mangaInfo: mangas }, () => {
+                        return db
+                            .collection("/chapters")
+                            .where("mangaId", "==", this.state.mangaId)
+                            .where("chapter", "==", this.state.nbChapter)
+                            .get()
+                            .then((snapshot) => {
+                                snapshot.forEach((doc) => {
+                                    chapters[doc.id] = doc.data();
+                                    chapters[doc.id].title = mangas[doc.data().mangaId].title;
+                                });
+                                this.setState({ chapterData: chapters });
+                            });
                     });
+                } else {
+                    return this.setState({ wrongSearchManga: !results.exists });
+                }
             });
     }
     render() {
         const { classes } = this.props;
-        return (
+        return this.state.wrongSearchManga ? (
+            <Redirect to="/" />
+        ) : (
             <Box>
                 {Object.values(this.state.chapterData).map((datas) => {
                     return datas.pages.map((page, i) => {
@@ -71,7 +79,7 @@ class MangaChapter extends Component {
         );
     }
 }
-MangaChapter.propTypes = {
+MangaReadChapter.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(MangaChapter);
+export default withStyles(styles)(MangaReadChapter);

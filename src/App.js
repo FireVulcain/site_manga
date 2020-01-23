@@ -5,9 +5,9 @@ import "./App.css";
 //Components
 import Navbar from "./components/layouts/Navbar";
 import Home from "./pages/Home";
-import MangaCategory from "./pages/MangaCategory";
-import MangaChapter from "./pages/MangaChapter";
 import UploadChapter from "./pages/UploadChapter";
+import MangaListChapters from "./pages/MangaListChapters";
+import MangaReadChapter from "./pages/MangaReadChapter";
 
 class App extends Component {
     render() {
@@ -19,8 +19,8 @@ class App extends Component {
                     <Route exact path="/planning" />
                     <Route exact path="/mangas" />
                     <Route exact path="/upload_chapter" component={UploadChapter} />
-                    <Route exact path="/:manga_name" component={MangaCategory} />
-                    <Route exact path="/:manga_name/:nb_chapter" component={MangaChapter} />
+                    <Route exact path="/:manga_name" component={MangaListChapters} />
+                    <Route exact path="/:manga_name/:nb_chapter" component={MangaReadChapter} />
                 </Switch>
             </Router>
         );

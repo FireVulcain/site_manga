@@ -2,12 +2,15 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router";
 
+import Img from "react-image";
+
 //Firebase
 import { withFirebase } from "./../config/Firebase";
 
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = {
     page: {
@@ -25,8 +28,12 @@ class MangaReadChapter extends Component {
             nbChapter: parseInt(this.props.match.params.nb_chapter),
             chapterData: [],
             loading: true,
-            wrongSearchManga: false
+            wrongSearchManga: false,
+            isImgLoaded: false
         };
+    }
+    handleImageLoaded() {
+        this.setState({ isImgLoaded: true });
     }
     componentDidMount() {
         const firestore = this.props.firebase.firestore;
@@ -69,7 +76,11 @@ class MangaReadChapter extends Component {
                     return datas.pages.map((page, i) => {
                         return (
                             <Box key={i} className={classes.page}>
-                                <img src={page.pageImg} alt="page chapitre" />;
+                                <Img
+                                    loader={<CircularProgress size={30} />}
+                                    src={page.pageImg}
+                                    alt="page chapitre"
+                                />
                             </Box>
                         );
                     });

@@ -1,5 +1,6 @@
 body {
     background: #252834;
+    overflow-x: hidden;
 }
 .App {
     text-align: center;

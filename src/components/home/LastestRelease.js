@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 // Firebase
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "../../config/firebaseConfig";
+import { withFirebase } from "./../../config/Firebase";
 
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
@@ -26,17 +24,19 @@ class LastestRelease extends Component {
         };
     }
     componentDidMount = () => {
-        const db = firebase.firestore();
+        const firestore = this.props.firebase.firestore;
         let mangas = {};
         let chapters = {};
-        db.collection("/mangas")
+        firestore
+            .collection("/mangas")
             .get()
             .then((results) => {
                 if (!results.empty) {
                     results.forEach((doc) => {
                         mangas[doc.id] = doc.data();
                     });
-                    db.collection("/chapters")
+                    firestore
+                        .collection("/chapters")
                         .limit(20)
                         .orderBy("chapter", "desc")
                         .get()
@@ -104,4 +104,4 @@ LastestRelease.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LastestRelease);
+export default withStyles(styles)(withFirebase(LastestRelease));

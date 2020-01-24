@@ -4,9 +4,7 @@ import PropTypes from "prop-types";
 import MangaInfo from "../components/mangas/MangaInfo";
 import { Redirect } from "react-router";
 
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "../config/firebaseConfig";
+import { withFirebase } from "./../config/Firebase";
 
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
@@ -30,18 +28,19 @@ class MangaListChapters extends Component {
         };
     }
     componentDidMount() {
-        const db = firebase.firestore();
+        const firestore = this.props.firebase.firestore;
         let mangas = {};
         let chapters = {};
 
-        db.collection("/mangas/")
+        firestore
+            .collection("/mangas/")
             .doc(this.state.mangaId)
             .get()
             .then((results) => {
                 if (results.exists) {
                     mangas[results.id] = results.data();
                     this.setState({ mangaInfo: mangas }, () => {
-                        return db
+                        return firestore
                             .collection("/chapters")
                             .where("mangaId", "==", this.state.mangaId)
                             .orderBy("chapter", "desc")
@@ -109,4 +108,4 @@ class MangaListChapters extends Component {
 MangaListChapters.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(MangaListChapters);
+export default withStyles(styles)(withFirebase(MangaListChapters));

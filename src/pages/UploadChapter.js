@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 // firebase
-import firebase from "firebase/app";
-import "firebase/storage";
-import "firebase/firestore";
-import "../config/firebaseConfig";
+import { withFirebase } from "./../config/Firebase";
 
 //Material UI
 import { withStyles } from "@material-ui/core/styles";
@@ -58,7 +55,7 @@ class UploadChapter extends Component {
     };
 
     handleUpload = () => {
-        const db = firebase.firestore();
+        const firestore = this.props.firebase.firestore;
         const { images } = this.state;
         const promises = [];
         let url = [];
@@ -68,8 +65,7 @@ class UploadChapter extends Component {
             this.setState({ loading: true });
 
             Object.values(images).map((image, i) => {
-                let uploadTask = firebase
-                    .storage()
+                let uploadTask = this.props.firebase.storage
                     .ref(`${pathUploadImg}/${image.name}`)
                     .put(image)
                     .then((snap) => {
@@ -84,7 +80,7 @@ class UploadChapter extends Component {
             Promise.all(promises).then(() => {
                 url.sort((a, b) => (a.pageImg > b.pageImg ? 1 : b.pageImg > a.pageImg ? -1 : 0));
                 this.setState({ url: url }, () => {
-                    let newChapter = db.collection("chapters").doc();
+                    let newChapter = firestore.collection("chapters").doc();
                     newChapter
                         .set({
                             chapter: parseInt(this.state.selectChapter),
@@ -108,9 +104,10 @@ class UploadChapter extends Component {
     };
 
     componentDidMount() {
-        const db = firebase.firestore();
+        const firestore = this.props.firebase.firestore;
         let mangas = {};
-        db.collection("/mangas")
+        firestore
+            .collection("/mangas")
             .get()
             .then((results) => {
                 results.forEach((doc) => {
@@ -180,4 +177,4 @@ class UploadChapter extends Component {
 UploadChapter.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(UploadChapter);
+export default withStyles(styles)(withFirebase(UploadChapter));

@@ -32,9 +32,6 @@ class MangaReadChapter extends Component {
             isImgLoaded: false
         };
     }
-    handleImageLoaded() {
-        this.setState({ isImgLoaded: true });
-    }
     componentDidMount() {
         const firestore = this.props.firebase.firestore;
         let mangas = {};

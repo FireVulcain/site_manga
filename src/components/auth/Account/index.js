@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { PasswordForgetForm } from "./../PasswordForget";
 import PasswordChangeForm from "./../PasswordChange";
 import { AuthUserContext, withAuthorization } from "./../../Session";
 
@@ -10,7 +9,6 @@ class AccountPage extends Component {
                 {(authUser) => (
                     <div>
                         <h1>Account Page : {authUser.email}</h1>
-                        <PasswordForgetForm />
                         <PasswordChangeForm />
                     </div>
                 )}

@@ -30,8 +30,8 @@ const App = () => (
             <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
             <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
             <Route exact path={ROUTES.ADMIN} component={AdminPage} />
-
             <Route exact path={ROUTES.UPLOAD_CHAPTER} component={UploadChapter} />
+
             <Route exact path={ROUTES.LIST_MANGA_CHAPTERS} component={MangaListChapters} />
             <Route exact path={ROUTES.READ_MANGA_CHAPTER} component={MangaReadChapter} />
         </Switch>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import SignOutButton from "./../auth/SignOut";
+import * as ROLES from "./../../constants/roles";
 
 // routes
 import * as ROUTES from "./../../constants/routes";
@@ -73,6 +74,11 @@ class Navbar extends Component {
                                         </Box>
                                     ) : (
                                         <Box>
+                                            {!!authUser.roles[ROLES.ADMIN] && (
+                                                <Button component={Link} to={ROUTES.UPLOAD_CHAPTER}>
+                                                    Ajouter chapitre
+                                                </Button>
+                                            )}
                                             <Button component={Link} to={ROUTES.ACCOUNT}>
                                                 Compte
                                             </Button>

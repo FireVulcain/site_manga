@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { compose } from "recompose";
+import { withAuthorization } from "./../components/Session";
+import * as ROLES from "./../constants/roles";
 
 // firebase
 import { withFirebase } from "./../config/Firebase";
@@ -98,9 +101,19 @@ class UploadChapter extends Component {
     };
 
     resetInput = () => {
-        this.setState({ images: null, url: [], selectManga: "", selectChapter: "", selectTitle: "", loading: false }, () => {
-            this.fileInput.value = "";
-        });
+        this.setState(
+            {
+                images: null,
+                url: [],
+                selectManga: "",
+                selectChapter: "",
+                selectTitle: "",
+                loading: false
+            },
+            () => {
+                this.fileInput.value = "";
+            }
+        );
     };
 
     componentDidMount() {
@@ -165,9 +178,24 @@ class UploadChapter extends Component {
                     />
                 </Box>
                 <Box>
-                    <input className={classes.input} type="file" onChange={this.handleImage} multiple ref={(ref) => (this.fileInput = ref)} />
-                    <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
-                        {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
+                    <input
+                        className={classes.input}
+                        type="file"
+                        onChange={this.handleImage}
+                        multiple
+                        ref={(ref) => (this.fileInput = ref)}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CloudUploadIcon />}
+                        onClick={this.handleUpload}
+                    >
+                        {this.state.loading ? (
+                            <CircularProgress size={30} color="secondary" />
+                        ) : (
+                            "Upload"
+                        )}
                     </Button>
                 </Box>
             </Box>
@@ -177,4 +205,9 @@ class UploadChapter extends Component {
 UploadChapter.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withFirebase(UploadChapter));
+const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
+export default compose(
+    withStyles(styles),
+    withAuthorization(condition),
+    withFirebase
+)(UploadChapter);

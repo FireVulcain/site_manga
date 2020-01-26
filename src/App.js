@@ -15,6 +15,7 @@ import PasswordForgetPage from "./components/auth/PasswordForget";
 import AccountPage from "./components/auth/Account";
 import AdminPage from "./components/Admin";
 import UploadChapter from "./pages/UploadChapter";
+import UploadManga from "./pages/UploadManga";
 import MangaListChapters from "./pages/MangaListChapters";
 import MangaReadChapter from "./pages/MangaReadChapter";
 
@@ -31,6 +32,7 @@ const App = () => (
             <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
             <Route exact path={ROUTES.ADMIN} component={AdminPage} />
             <Route exact path={ROUTES.UPLOAD_CHAPTER} component={UploadChapter} />
+            <Route exact path={ROUTES.UPLOAD_MANGA} component={UploadManga} />
 
             <Route exact path={ROUTES.LIST_MANGA_CHAPTERS} component={MangaListChapters} />
             <Route exact path={ROUTES.READ_MANGA_CHAPTER} component={MangaReadChapter} />

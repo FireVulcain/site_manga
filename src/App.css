@@ -72,6 +72,35 @@ body .titlePage {
     left: 50%;
 }
 
+/* FORM */
+.formAdd {
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
+    width: 100%;
+    padding: 34px 50px 50px;
+    margin: 0 auto;
+    background: #1e242c;
+}
+.formAdd .MuiButton-containedPrimary,
+.formAdd .MuiFab-primary {
+    background: #2b5b99;
+}
+.formAdd .MuiButton-containedPrimary:hover,
+.formAdd .MuiFab-primary:hover {
+    background: #3672bf;
+}
+
+.formAdd label,
+.formAdd input,
+.formAdd textarea {
+    color: #fff;
+}
+.formAdd input:focus,
+.formAdd textarea:focus {
+    color: #3f51b5;
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);

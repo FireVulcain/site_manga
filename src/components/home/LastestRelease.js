@@ -38,7 +38,7 @@ class LastestRelease extends Component {
                     firestore
                         .collection("/chapters")
                         .limit(20)
-                        .orderBy("chapter", "desc")
+                        .orderBy("createdAt", "desc")
                         .get()
                         .then((docSnaps) => {
                             if (!docSnaps.empty) {

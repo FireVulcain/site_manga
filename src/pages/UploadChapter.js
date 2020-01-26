@@ -9,14 +9,17 @@ import { withFirebase } from "./../config/Firebase";
 
 //Material UI
 import { withStyles } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
+import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 const styles = {
     option: {
@@ -27,23 +30,35 @@ const styles = {
         color: "#fff"
     },
     input: {
+        display: "none"
+    },
+    uploadImg: {
+        margin: "10px 0",
         color: "#fff",
-        "& ::placeholder": {
-            opacity: 0.8
+
+        "& > span": {
+            marginRight: "10px"
         }
+    },
+    errors: {
+        color: "#f44336"
     }
+};
+const INITIAL_STATE = {
+    images: null,
+    url: [],
+    selectManga: "",
+    selectChapter: "",
+    selectTitle: "",
+    loading: false,
+    errors: null
 };
 class UploadChapter extends Component {
     constructor(props) {
         super(props);
         this.state = {
             mangas: [],
-            images: null,
-            url: [],
-            selectManga: "",
-            selectChapter: "",
-            selectTitle: "",
-            loading: false
+            ...INITIAL_STATE
         };
     }
 
@@ -57,63 +72,81 @@ class UploadChapter extends Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
+    handleValidation = () => {
+        let { selectManga, selectChapter, selectTitle, images } = this.state;
+        let errors = {};
+        let formIsValid = true;
+
+        if (!selectManga) {
+            formIsValid = false;
+            errors["selectManga"] = "Champ obligatoire";
+        }
+        if (!selectChapter) {
+            formIsValid = false;
+            errors["selectChapter"] = "Champ obligatoire";
+        } else if (isNaN(selectChapter)) {
+            formIsValid = false;
+            errors["selectChapter"] = "Chiffres uniquement";
+        }
+
+        if (!selectTitle) {
+            formIsValid = false;
+            errors["selectTitle"] = "Champ obligatoire";
+        }
+        if (!images) {
+            formIsValid = false;
+            errors["images"] = "Image obligatoire";
+        }
+
+        this.setState({ errors: errors });
+        return formIsValid;
+    };
+
     handleUpload = () => {
+        if (!this.handleValidation()) {
+            return;
+        }
+
         const firestore = this.props.firebase.firestore;
         const { images } = this.state;
         const promises = [];
         let url = [];
         let pathUploadImg = this.state.selectManga + "/" + this.state.selectChapter;
 
-        if (this.state.selectManga && this.state.selectChapter) {
-            this.setState({ loading: true });
+        this.setState({ loading: true });
 
-            Object.values(images).map((image, i) => {
-                let uploadTask = this.props.firebase.storage
-                    .ref(`${pathUploadImg}/${image.name}`)
-                    .put(image)
-                    .then((snap) => {
-                        return snap.ref.getDownloadURL();
-                    })
-                    .then((downloadURL) => {
-                        url.push({ pageImg: downloadURL, pageNumber: i + 1 });
-                    });
-                return promises.push(uploadTask);
-            });
-
-            Promise.all(promises).then(() => {
-                url.sort((a, b) => (a.pageImg > b.pageImg ? 1 : b.pageImg > a.pageImg ? -1 : 0));
-                this.setState({ url: url }, () => {
-                    let newChapter = firestore.collection("chapters").doc();
-                    newChapter
-                        .set({
-                            chapter: parseInt(this.state.selectChapter),
-                            mangaId: this.state.selectManga,
-                            titleChapter: this.state.selectTitle,
-                            pageCount: this.state.url.length,
-                            pages: this.state.url
-                        })
-                        .then(() => {
-                            this.resetInput();
-                        });
+        Object.values(images).map((image, i) => {
+            let uploadTask = this.props.firebase.storage
+                .ref(`${pathUploadImg}/${image.name}`)
+                .put(image)
+                .then((snap) => {
+                    return snap.ref.getDownloadURL();
+                })
+                .then((downloadURL) => {
+                    url.push({ pageImg: downloadURL, pageNumber: i + 1 });
                 });
-            });
-        }
-    };
+            return promises.push(uploadTask);
+        });
 
-    resetInput = () => {
-        this.setState(
-            {
-                images: null,
-                url: [],
-                selectManga: "",
-                selectChapter: "",
-                selectTitle: "",
-                loading: false
-            },
-            () => {
-                this.fileInput.value = "";
-            }
-        );
+        Promise.all(promises).then(() => {
+            url.sort((a, b) => (a.pageImg > b.pageImg ? 1 : b.pageImg > a.pageImg ? -1 : 0));
+            this.setState({ url: url }, () => {
+                let newChapter = firestore.collection("chapters").doc();
+                newChapter
+                    .set({
+                        chapter: parseInt(this.state.selectChapter),
+                        mangaId: this.state.selectManga,
+                        titleChapter: this.state.selectTitle,
+                        pageCount: this.state.url.length,
+                        pages: this.state.url,
+                        createdAt: new Date()
+                    })
+                    .then(() => {
+                        this.setState({ ...INITIAL_STATE });
+                        this.fileInput.value = "";
+                    });
+            });
+        });
     };
 
     componentDidMount() {
@@ -131,73 +164,70 @@ class UploadChapter extends Component {
     }
     render() {
         const { classes } = this.props;
+        const { images, errors } = this.state;
         return (
             <Box className="main">
-                <FormControl className={classes.formControl}>
-                    <InputLabel className={classes.select} htmlFor="selectManga">
-                        Choisir un manga
-                    </InputLabel>
-                    <Select
-                        className={classes.select}
-                        native
-                        value={this.state.selectManga}
-                        onChange={this.handleChange}
-                        name="selectManga"
-                        id="selectManga"
-                    >
-                        <option value=""></option>
-                        {Object.entries(this.state.mangas).map((manga, i) => {
-                            return (
-                                <option value={manga[0]} key={i} className={classes.option}>
-                                    {manga[1].title}
-                                </option>
-                            );
-                        })}
-                    </Select>
-                </FormControl>
-                <Box>
-                    <Input
-                        className={classes.input}
-                        color="primary"
-                        type="text"
+                <form className="formAdd" noValidate autoComplete="off">
+                    <FormControl className={classes.formControl} error={errors ? !!("selectManga" in errors) : false}>
+                        <InputLabel className={classes.select} htmlFor="selectManga">
+                            Choisir un manga
+                        </InputLabel>
+                        <Select
+                            className={classes.select}
+                            native
+                            value={this.state.selectManga}
+                            onChange={this.handleChange}
+                            name="selectManga"
+                            id="selectManga"
+                        >
+                            <option value=""></option>
+                            {Object.entries(this.state.mangas).map((manga, i) => {
+                                return (
+                                    <option value={manga[0]} key={i} className={classes.option}>
+                                        {manga[1].title}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                        {errors ? !!("selectManga" in errors) ? <FormHelperText>{errors["selectManga"]}</FormHelperText> : null : false}
+                    </FormControl>
+                    <TextField
                         value={this.state.selectTitle}
                         onChange={this.handleChange}
-                        placeholder="Titre du chapitre"
+                        label="Titre du chapitre"
                         name="selectTitle"
+                        error={errors ? !!("selectTitle" in errors) : false}
+                        helperText={errors ? ("selectTitle" in errors ? errors["selectTitle"] : "") : false}
                     />
-                </Box>
-                <Box>
-                    <Input
-                        className={classes.input}
-                        color="primary"
-                        type="text"
+                    <TextField
                         value={this.state.selectChapter}
                         onChange={this.handleChange}
-                        placeholder="Numéro du chapitre"
+                        label="Numéro du chapitre"
                         name="selectChapter"
+                        error={errors ? !!("selectChapter" in errors) : false}
+                        helperText={errors ? ("selectChapter" in errors ? errors["selectChapter"] : "") : false}
                     />
-                </Box>
-                <Box>
                     <input
-                        className={classes.input}
+                        accept="image/*"
+                        id="contained-button-file"
                         type="file"
                         onChange={this.handleImage}
                         multiple
+                        className={classes.input}
                         ref={(ref) => (this.fileInput = ref)}
                     />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<CloudUploadIcon />}
-                        onClick={this.handleUpload}
-                    >
-                        {this.state.loading ? (
-                            <CircularProgress size={30} color="secondary" />
-                        ) : (
-                            "Upload"
-                        )}
+                    <label className={classes.uploadImg} htmlFor="contained-button-file">
+                        <Fab color="primary" component="span">
+                            <AddIcon />
+                        </Fab>
+                        <span className={errors ? ("images" in errors ? classes.errors : "") : null}>
+                            {images ? images.length + " fichiers" : "Ajouter des images"}
+                        </span>
+                    </label>
+                    <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
+                        {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
                     </Button>
-                </Box>
+                </form>
             </Box>
         );
     }
@@ -206,8 +236,4 @@ UploadChapter.propTypes = {
     classes: PropTypes.object.isRequired
 };
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
-export default compose(
-    withStyles(styles),
-    withAuthorization(condition),
-    withFirebase
-)(UploadChapter);
+export default compose(withStyles(styles), withAuthorization(condition), withFirebase)(UploadChapter);

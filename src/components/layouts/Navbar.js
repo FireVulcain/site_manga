@@ -15,7 +15,11 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
+import AddIcon from "@material-ui/icons/Add";
 //img
 import logo from "./../../assets/images/logo.png";
 
@@ -35,9 +39,25 @@ const styles = (theme) => ({
         "& a": {
             color: "#fff"
         }
+    },
+    addButton: {
+        color: "#fff"
     }
 });
 class Navbar extends Component {
+    constructor() {
+        super();
+        this.state = {
+            anchorEl: null
+        };
+    }
+    handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
     render() {
         const { classes } = this.props;
         return (
@@ -73,11 +93,30 @@ class Navbar extends Component {
                                             </Button>
                                         </Box>
                                     ) : (
-                                        <Box>
+                                        <Box display="flex">
                                             {!!authUser.roles[ROLES.ADMIN] && (
-                                                <Button component={Link} to={ROUTES.UPLOAD_CHAPTER}>
-                                                    Ajouter chapitre
-                                                </Button>
+                                                <Box>
+                                                    <Fab onClick={this.handleClick} size="small" color="primary">
+                                                        <AddIcon />
+                                                    </Fab>
+                                                    <Menu
+                                                        anchorOrigin={{
+                                                            vertical: "bottom",
+                                                            horizontal: "left"
+                                                        }}
+                                                        getContentAnchorEl={null}
+                                                        anchorEl={this.state.anchorEl}
+                                                        open={Boolean(this.state.anchorEl)}
+                                                        onClose={this.handleClose}
+                                                    >
+                                                        <MenuItem component={Link} to={ROUTES.UPLOAD_MANGA} onClick={this.handleClose}>
+                                                            Manga
+                                                        </MenuItem>
+                                                        <MenuItem component={Link} to={ROUTES.UPLOAD_CHAPTER} onClick={this.handleClose}>
+                                                            Chapitre
+                                                        </MenuItem>
+                                                    </Menu>
+                                                </Box>
                                             )}
                                             <Button component={Link} to={ROUTES.ACCOUNT}>
                                                 Compte

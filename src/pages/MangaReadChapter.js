@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router";
+import Head from "./../components/layouts/Head";
+import * as ROUTES from "./../constants/routes";
 
 import Img from "react-image";
 
@@ -25,10 +26,10 @@ class MangaReadChapter extends Component {
         super(props);
         this.state = {
             mangaId: this.props.match.params.manga_name,
+            titleChapter: "",
             nbChapter: parseInt(this.props.match.params.nb_chapter),
             chapterData: [],
             loading: true,
-            wrongSearchManga: false,
             isImgLoaded: false
         };
     }
@@ -44,6 +45,7 @@ class MangaReadChapter extends Component {
             .then((results) => {
                 if (results.exists) {
                     mangas[results.id] = results.data();
+                    this.setState({ titleChapter: results.data().title });
                     this.setState({ mangaInfo: mangas }, () => {
                         return firestore
                             .collection("/chapters")
@@ -59,30 +61,27 @@ class MangaReadChapter extends Component {
                             });
                     });
                 } else {
-                    return this.setState({ wrongSearchManga: !results.exists });
+                    return this.props.history.push(ROUTES.HOME);
                 }
             });
     }
     render() {
+        const { titleChapter, nbChapter } = this.state;
         const { classes } = this.props;
-        return this.state.wrongSearchManga ? (
-            <Redirect to="/" />
-        ) : (
-            <Box>
-                {Object.values(this.state.chapterData).map((datas) => {
-                    return datas.pages.map((page, i) => {
-                        return (
-                            <Box key={i} className={classes.page}>
-                                <Img
-                                    loader={<CircularProgress size={30} />}
-                                    src={page.pageImg}
-                                    alt="page chapitre"
-                                />
-                            </Box>
-                        );
-                    });
-                })}
-            </Box>
+        return (
+            <Head pageMeta={{ title: "Chapitre " + nbChapter + " de " + titleChapter + " | ScanNation France" }}>
+                <Box>
+                    {Object.values(this.state.chapterData).map((datas) => {
+                        return datas.pages.map((page, i) => {
+                            return (
+                                <Box key={i} className={classes.page}>
+                                    <Img loader={<CircularProgress size={30} />} src={page.pageImg} alt="page chapitre" />
+                                </Box>
+                            );
+                        });
+                    })}
+                </Box>
+            </Head>
         );
     }
 }

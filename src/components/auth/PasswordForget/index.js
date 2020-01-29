@@ -2,16 +2,26 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { withFirebase } from "./../../../config/Firebase";
 import * as ROUTES from "./../../../constants/routes";
+import Head from "./../../layouts/Head";
+
+//Material ui
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const PasswordForgetPage = () => (
-    <div>
-        <h1>PasswordForget</h1>
-        <PasswordForgetForm />
-    </div>
+    <Head pageMeta={{ title: "Mot de passe oublié | ScanNation France" }}>
+        <Box className="logs_page">
+            <h1>Mot de passe oublié</h1>
+            <PasswordForgetForm />
+        </Box>
+    </Head>
 );
 const INITIAL_STATE = {
     email: "",
-    error: null
+    error: null,
+    loading: false
 };
 class PasswordForgetFormBase extends Component {
     constructor(props) {
@@ -19,6 +29,7 @@ class PasswordForgetFormBase extends Component {
         this.state = { ...INITIAL_STATE };
     }
     onSubmit = (event) => {
+        this.setState({ loading: true });
         const { email } = this.state;
         this.props.firebase
             .doPasswordReset(email)
@@ -26,7 +37,7 @@ class PasswordForgetFormBase extends Component {
                 this.setState({ ...INITIAL_STATE });
             })
             .catch((error) => {
-                this.setState({ error });
+                this.setState({ error, loading: false });
             });
         event.preventDefault();
     };
@@ -34,14 +45,14 @@ class PasswordForgetFormBase extends Component {
         this.setState({ [event.target.name]: event.target.value });
     };
     render() {
-        const { email, error } = this.state;
+        const { email, error, loading } = this.state;
         const isInvalid = email === "";
         return (
             <form onSubmit={this.onSubmit}>
-                <input name="email" value={this.state.email} onChange={this.onChange} type="text" placeholder="Email Address" />
-                <button disabled={isInvalid} type="submit">
-                    Reset My Password
-                </button>
+                <TextField type="email" onChange={this.onChange} label="Adresse email" value={this.state.email} name="email"></TextField>
+                <Button type="submit" disabled={isInvalid} variant="contained" color="primary">
+                    {loading ? <CircularProgress size={30} /> : "Réinitialiser"}
+                </Button>
                 {error && <p>{error.message}</p>}
             </form>
         );

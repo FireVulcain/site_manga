@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MangaInfo from "../components/mangas/MangaInfo";
 import * as ROUTES from "./../constants/routes";
+import Head from "./../components/layouts/Head";
 
 import { withFirebase } from "./../config/Firebase";
 
@@ -26,6 +27,7 @@ class MangaListChapters extends Component {
             mangaId: this.props.match.params.manga_name,
             mangaInfo: [],
             listChapters: [],
+            titleChapter: "",
             loading: true
         };
     }
@@ -41,7 +43,7 @@ class MangaListChapters extends Component {
             .then((results) => {
                 if (results.exists) {
                     mangas[results.id] = results.data();
-                    this.setState({ mangaInfo: mangas }, () => {
+                    this.setState({ mangaInfo: mangas, titleChapter: results.data().title }, () => {
                         return firestore
                             .collection("/chapters")
                             .where("mangaId", "==", this.state.mangaId)
@@ -63,46 +65,48 @@ class MangaListChapters extends Component {
             });
     }
     render() {
-        const { listChapters } = this.state;
+        const { listChapters, titleChapter } = this.state;
         const { classes } = this.props;
         return (
-            <Box className="main">
-                <Grid item md={12}>
-                    <Typography variant="h5" component="h3" className="titlePage">
-                        Liste des chapitres
-                    </Typography>
-                </Grid>
-                <Grid container spacing={5}>
-                    <Grid item md={8} className="containerInfo">
-                        {this.state.loading ? (
-                            <CircularProgress size={30} className="loadingInfo" />
-                        ) : Object.entries(listChapters).length === 0 ? (
-                            <Typography variant="body1" component="p" className={classes.noChapter}>
-                                Pas de chapitres encore disponibles sur le site
-                            </Typography>
-                        ) : (
-                            Object.values(this.state.listChapters).map((listChapter, i) => {
-                                return (
-                                    <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className="newChapter">
-                                        <img src={listChapter.mangaImage} alt="" className="newChapterImg" />
-                                        <Box>
-                                            <Typography variant="body1" component="p">
-                                                {listChapter.title} {listChapter.chapter}
-                                            </Typography>
-                                            <Typography variant="body1" component="p">
-                                                {listChapter.titleChapter}
-                                            </Typography>
-                                        </Box>
-                                    </Link>
-                                );
-                            })
-                        )}
+            <Head pageMeta={{ title: "Chapitres de " + titleChapter + " | ScanNation France" }}>
+                <Box className="main">
+                    <Grid item md={12}>
+                        <Typography variant="h5" component="h3" className="titlePage">
+                            Liste des chapitres
+                        </Typography>
                     </Grid>
-                    <Grid item md={4}>
-                        <MangaInfo mangaInfo={this.state.mangaInfo} />
+                    <Grid container spacing={5}>
+                        <Grid item md={8} className="containerInfo">
+                            {this.state.loading ? (
+                                <CircularProgress size={30} className="loadingInfo" />
+                            ) : Object.entries(listChapters).length === 0 ? (
+                                <Typography variant="body1" component="p" className={classes.noChapter}>
+                                    Pas de chapitres encore disponibles sur le site
+                                </Typography>
+                            ) : (
+                                Object.values(this.state.listChapters).map((listChapter, i) => {
+                                    return (
+                                        <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className="newChapter">
+                                            <img src={listChapter.mangaImage} alt="" className="newChapterImg" />
+                                            <Box>
+                                                <Typography variant="body1" component="p">
+                                                    {listChapter.title} {listChapter.chapter}
+                                                </Typography>
+                                                <Typography variant="body1" component="p">
+                                                    {listChapter.titleChapter}
+                                                </Typography>
+                                            </Box>
+                                        </Link>
+                                    );
+                                })
+                            )}
+                        </Grid>
+                        <Grid item md={4}>
+                            <MangaInfo mangaInfo={this.state.mangaInfo} />
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Box>
+                </Box>
+            </Head>
         );
     }
 }

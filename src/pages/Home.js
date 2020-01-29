@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Head from "./../components/layouts/Head";
 
 //Component
 import LastestRelease from "./../components/home/LastestRelease";
@@ -9,11 +10,13 @@ import Grid from "@material-ui/core/Grid";
 class Home extends Component {
     render() {
         return (
-            <Grid container className="main">
-                <Grid item md={12}>
-                    <LastestRelease />
+            <Head pageMeta={{ title: "ScanNation France | Scans de manga en ligne" }}>
+                <Grid container className="main">
+                    <Grid item md={12}>
+                        <LastestRelease />
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Head>
         );
     }
 }

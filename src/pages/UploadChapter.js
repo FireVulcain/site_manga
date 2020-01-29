@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { compose } from "recompose";
 import { withAuthorization } from "./../components/Session";
 import * as ROLES from "./../constants/roles";
+import Head from "./../components/layouts/Head";
 
 // firebase
 import { withFirebase } from "./../config/Firebase";
@@ -183,75 +184,77 @@ class UploadChapter extends Component {
         const { classes } = this.props;
         const { images, errors } = this.state;
         return (
-            <Box className="main">
-                <form className="formAdd" noValidate autoComplete="off">
-                    <FormControl className={classes.formControl} error={errors ? !!("selectManga" in errors) : false}>
-                        <InputLabel className={classes.select} htmlFor="selectManga">
-                            Choisir un manga
-                        </InputLabel>
-                        <Select
-                            className={classes.select}
-                            native
-                            value={this.state.selectManga}
+            <Head pageMeta={{ title: "Ajouter un chapitre | ScanNation France " }}>
+                <Box className="main">
+                    <form className="formAdd" noValidate autoComplete="off">
+                        <FormControl className={classes.formControl} error={errors ? !!("selectManga" in errors) : false}>
+                            <InputLabel className={classes.select} htmlFor="selectManga">
+                                Choisir un manga
+                            </InputLabel>
+                            <Select
+                                className={classes.select}
+                                native
+                                value={this.state.selectManga}
+                                onChange={this.handleChange}
+                                name="selectManga"
+                                id="selectManga"
+                            >
+                                <option value=""></option>
+                                {Object.entries(this.state.mangas).map((manga, i) => {
+                                    return (
+                                        <option value={manga[0]} key={i} className={classes.option}>
+                                            {manga[1].title}
+                                        </option>
+                                    );
+                                })}
+                            </Select>
+                            {errors ? !!("selectManga" in errors) ? <FormHelperText>{errors["selectManga"]}</FormHelperText> : null : false}
+                        </FormControl>
+                        <TextField
+                            value={this.state.selectTitle}
                             onChange={this.handleChange}
-                            name="selectManga"
-                            id="selectManga"
-                        >
-                            <option value=""></option>
-                            {Object.entries(this.state.mangas).map((manga, i) => {
-                                return (
-                                    <option value={manga[0]} key={i} className={classes.option}>
-                                        {manga[1].title}
-                                    </option>
-                                );
-                            })}
-                        </Select>
-                        {errors ? !!("selectManga" in errors) ? <FormHelperText>{errors["selectManga"]}</FormHelperText> : null : false}
-                    </FormControl>
-                    <TextField
-                        value={this.state.selectTitle}
-                        onChange={this.handleChange}
-                        label="Titre du chapitre"
-                        name="selectTitle"
-                        error={errors ? !!("selectTitle" in errors) : false}
-                        helperText={errors ? ("selectTitle" in errors ? errors["selectTitle"] : "") : false}
-                    />
-                    <TextField
-                        value={this.state.selectChapter}
-                        onChange={this.handleChange}
-                        label="Numéro du chapitre"
-                        name="selectChapter"
-                        error={errors ? !!("selectChapter" in errors) : false}
-                        helperText={errors ? ("selectChapter" in errors ? errors["selectChapter"] : "") : false}
-                    />
-                    <input
-                        accept="image/*"
-                        id="contained-button-file"
-                        type="file"
-                        onChange={this.handleImage}
-                        multiple
-                        className={classes.input}
-                        ref={(ref) => (this.fileInput = ref)}
-                    />
-                    <label className={classes.uploadImg} htmlFor="contained-button-file">
-                        <Fab color="primary" component="span">
-                            <AddIcon />
-                        </Fab>
-                        <span className={errors ? ("images" in errors ? classes.errors : "") : null}>
-                            {images ? images.length + " fichiers" : "Ajouter des images"}
-                        </span>
-                    </label>
+                            label="Titre du chapitre"
+                            name="selectTitle"
+                            error={errors ? !!("selectTitle" in errors) : false}
+                            helperText={errors ? ("selectTitle" in errors ? errors["selectTitle"] : "") : false}
+                        />
+                        <TextField
+                            value={this.state.selectChapter}
+                            onChange={this.handleChange}
+                            label="Numéro du chapitre"
+                            name="selectChapter"
+                            error={errors ? !!("selectChapter" in errors) : false}
+                            helperText={errors ? ("selectChapter" in errors ? errors["selectChapter"] : "") : false}
+                        />
+                        <input
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            onChange={this.handleImage}
+                            multiple
+                            className={classes.input}
+                            ref={(ref) => (this.fileInput = ref)}
+                        />
+                        <label className={classes.uploadImg} htmlFor="contained-button-file">
+                            <Fab color="primary" component="span">
+                                <AddIcon />
+                            </Fab>
+                            <span className={errors ? ("images" in errors ? classes.errors : "") : null}>
+                                {images ? images.length + " fichiers" : "Ajouter des images"}
+                            </span>
+                        </label>
 
-                    <FormControlLabel
-                        control={<Checkbox className={classes.checkbox} onChange={this.handleChecked} value="isLastChapter" color="primary" />}
-                        label="Définir comme chapitre le plus récent"
-                    />
+                        <FormControlLabel
+                            control={<Checkbox className={classes.checkbox} onChange={this.handleChecked} value="isLastChapter" color="primary" />}
+                            label="Définir comme chapitre le plus récent"
+                        />
 
-                    <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
-                        {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
-                    </Button>
-                </form>
-            </Box>
+                        <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
+                            {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
+                        </Button>
+                    </form>
+                </Box>
+            </Head>
         );
     }
 }

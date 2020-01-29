@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 import { withFirebase } from "./../../../config/Firebase";
+
+//Material-ui
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 const INITIAL_STATE = {
     passwordOne: "",
     passwordTwo: "",
+    loading: false,
     error: null
 };
 class PasswordChangeForm extends Component {
@@ -11,6 +18,7 @@ class PasswordChangeForm extends Component {
         this.state = { ...INITIAL_STATE };
     }
     onSubmit = (event) => {
+        this.setState({loading: true})
         const { passwordOne } = this.state;
         this.props.firebase
             .doPasswordUpdate(passwordOne)
@@ -26,15 +34,15 @@ class PasswordChangeForm extends Component {
         this.setState({ [event.target.name]: event.target.value });
     };
     render() {
-        const { passwordOne, passwordTwo, error } = this.state;
+        const { passwordOne, passwordTwo, error, loading } = this.state;
         const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
         return (
             <form onSubmit={this.onSubmit}>
-                <input name="passwordOne" value={passwordOne} onChange={this.onChange} type="password" placeholder="New Password" />
-                <input name="passwordTwo" value={passwordTwo} onChange={this.onChange} type="password" placeholder="Confirm New Password" />
-                <button disabled={isInvalid} type="submit">
-                    Change My Password
-                </button>
+                <TextField onChange={this.onChange} name="passwordOne" value={passwordOne} type="password" label="Nouveau mot de passe" />
+                <TextField onChange={this.onChange} name="passwordTwo" value={passwordTwo} type="password" label="Confirmation du mot de passe" />
+                <Button type="submit" disabled={isInvalid} variant="contained" color="primary">
+                    {loading ? <CircularProgress size={30} /> : "Changer de mot de passe"}
+                </Button>
                 {error && <p>{error.message}</p>}
             </form>
         );

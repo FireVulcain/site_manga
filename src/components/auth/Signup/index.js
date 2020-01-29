@@ -5,6 +5,8 @@ import * as ROUTES from "./../../../constants/routes";
 import * as ROLES from "./../../../constants/roles";
 import { withFirebase } from "./../../../config/Firebase";
 
+import Head from "./../../layouts/Head";
+
 //Material-ui
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
@@ -14,10 +16,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const SignUpPage = () => (
-    <Box className="logs_page">
-        <h1>Inscription</h1>
-        <SignUpForm />
-    </Box>
+    <Head pageMeta={{ title: "Inscription | ScanNation France" }}>
+        <Box className="logs_page">
+            <h1>Inscription</h1>
+            <SignUpForm />
+        </Box>
+    </Head>
 );
 const INITIAL_STATE = {
     username: "",

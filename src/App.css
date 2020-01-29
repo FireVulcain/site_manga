@@ -79,7 +79,7 @@ form {
     display: flex;
     flex-direction: column;
     max-width: 900px;
-    width: 100%;
+    width: auto;
     padding: 34px 50px 50px;
     margin: 0 auto;
     background: #1e242c;

@@ -5,6 +5,7 @@ import { SignUpLink } from "./../Signup";
 import { PasswordForgetLink } from "./../PasswordForget";
 import { withFirebase } from "./../../../config/Firebase";
 import * as ROUTES from "./../../../constants/routes";
+import Head from "./../../layouts/Head";
 
 // Material-ui
 import Box from "@material-ui/core/Box";
@@ -13,12 +14,14 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const SignInPage = () => (
-    <Box className="logs_page">
-        <h1>Connexion</h1>
-        <SignInForm />
-        <PasswordForgetLink />
-        <SignUpLink />
-    </Box>
+    <Head pageMeta={{ title: "Connexion | ScanNation France" }}>
+        <Box className="logs_page">
+            <h1>Connexion</h1>
+            <SignInForm />
+            <PasswordForgetLink />
+            <SignUpLink />
+        </Box>
+    </Head>
 );
 const INITIAL_STATE = {
     email: "",
@@ -53,7 +56,7 @@ class SignInFormBase extends Component {
         const isInvalid = password === "" || email === "";
         return (
             <form onSubmit={this.onSubmit}>
-                <TextField onChange={this.onChange} name="email" value={email} label="Adresse email" />
+                <TextField onChange={this.onChange} name="email" value={email} label="Adresse email" type="email" />
                 <TextField onChange={this.onChange} name="password" value={password} label="Mot de passe" type="password" />
                 <Button type="submit" disabled={isInvalid} variant="contained" color="primary">
                     {loading ? <CircularProgress size={30} /> : "Connexion"}

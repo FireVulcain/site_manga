@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import Head from "./../components/layouts/Head";
 
 import { withFirebase } from "./../config/Firebase";
 
@@ -35,34 +36,36 @@ class MangasList extends Component {
     };
     render() {
         return (
-            <Grid container className="main">
-                <Grid item md={12}>
-                    <Typography variant="h5" component="h3" className="titlePage">
-                        Liste des mangas sur le site
-                    </Typography>
+            <Head pageMeta={{ title: "Liste de nos mangas | ScanNation France " }}>
+                <Grid container className="main">
+                    <Grid item md={12}>
+                        <Typography variant="h5" component="h3" className="titlePage">
+                            Liste des mangas sur le site
+                        </Typography>
+                    </Grid>
+                    <Grid item md={12} className="containerInfo">
+                        {this.state.loading ? (
+                            <CircularProgress size={30} className="loadingInfo" />
+                        ) : (
+                            Object.entries(this.state.mangas).map((manga, i) => {
+                                return (
+                                    <Link key={i} to={manga[0]} className="newChapter">
+                                        <img src={manga[1].mangaImage} alt="" className="newChapterImg" />
+                                        <Box>
+                                            <Typography variant="body1" component="p">
+                                                {manga[1].title}
+                                            </Typography>
+                                            <Typography variant="body1" component="span">
+                                                {manga[1].lastChapter === 0 ? "À venir" : "Dernier chapitre :" + manga[1].lastChapter}
+                                            </Typography>
+                                        </Box>
+                                    </Link>
+                                );
+                            })
+                        )}
+                    </Grid>
                 </Grid>
-                <Grid item md={12} className="containerInfo">
-                    {this.state.loading ? (
-                        <CircularProgress size={30} className="loadingInfo" />
-                    ) : (
-                        Object.entries(this.state.mangas).map((manga, i) => {
-                            return (
-                                <Link key={i} to={manga[0]} className="newChapter">
-                                    <img src={manga[1].mangaImage} alt="" className="newChapterImg" />
-                                    <Box>
-                                        <Typography variant="body1" component="p">
-                                            {manga[1].title}
-                                        </Typography>
-                                        <Typography variant="body1" component="span">
-                                            {manga[1].lastChapter === 0 ? "À venir" : "Dernier chapitre :" + manga[1].lastChapter}
-                                        </Typography>
-                                    </Box>
-                                </Link>
-                            );
-                        })
-                    )}
-                </Grid>
-            </Grid>
+            </Head>
         );
     }
 }

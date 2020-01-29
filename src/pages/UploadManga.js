@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { compose } from "recompose";
 import { withAuthorization } from "./../components/Session";
 import * as ROLES from "./../constants/roles";
+import Head from "./../components/layouts/Head";
 
 // firebase
 import { withFirebase } from "./../config/Firebase";
@@ -129,47 +130,49 @@ class UploadManga extends Component {
         const { classes } = this.props;
         const { manga_name, synopsis, image, errors, loading } = this.state;
         return (
-            <Box className="main">
-                <form className="formAdd" noValidate autoComplete="off">
-                    <TextField
-                        onChange={this.handleChange}
-                        name="manga_name"
-                        value={manga_name}
-                        label="Nom du Manga"
-                        error={errors ? !!("manga_name" in errors) : false}
-                        helperText={errors ? ("manga_name" in errors ? errors["manga_name"] : "") : false}
-                    />
-                    <TextField
-                        onChange={this.handleChange}
-                        name="synopsis"
-                        value={synopsis}
-                        label="Synopsis"
-                        multiline
-                        rows={2}
-                        error={errors ? !!("synopsis" in errors) : false}
-                        helperText={errors ? ("synopsis" in errors ? errors["synopsis"] : "") : false}
-                    />
-                    <input
-                        accept="image/*"
-                        onChange={this.handleImage}
-                        ref={(ref) => (this.fileInput = ref)}
-                        className={classes.input}
-                        id="contained-button-file"
-                        type="file"
-                    />
-                    <label className={classes.uploadImg} htmlFor="contained-button-file">
-                        <Fab color="primary" component="span">
-                            <AddIcon />
-                        </Fab>
-                        <span className={errors ? ("image" in errors ? classes.errors : "") : null}>
-                            {image ? image[0].name : "Ajouter une Image"}
-                        </span>
-                    </label>
-                    <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
-                        {loading ? <CircularProgress size={30} color="secondary" /> : "Ajouter un manga"}
-                    </Button>
-                </form>
-            </Box>
+            <Head pageMeta={{ title: "Ajouter un manga | ScanNation France " }}>
+                <Box className="main">
+                    <form className="formAdd" noValidate autoComplete="off">
+                        <TextField
+                            onChange={this.handleChange}
+                            name="manga_name"
+                            value={manga_name}
+                            label="Nom du Manga"
+                            error={errors ? !!("manga_name" in errors) : false}
+                            helperText={errors ? ("manga_name" in errors ? errors["manga_name"] : "") : false}
+                        />
+                        <TextField
+                            onChange={this.handleChange}
+                            name="synopsis"
+                            value={synopsis}
+                            label="Synopsis"
+                            multiline
+                            rows={2}
+                            error={errors ? !!("synopsis" in errors) : false}
+                            helperText={errors ? ("synopsis" in errors ? errors["synopsis"] : "") : false}
+                        />
+                        <input
+                            accept="image/*"
+                            onChange={this.handleImage}
+                            ref={(ref) => (this.fileInput = ref)}
+                            className={classes.input}
+                            id="contained-button-file"
+                            type="file"
+                        />
+                        <label className={classes.uploadImg} htmlFor="contained-button-file">
+                            <Fab color="primary" component="span">
+                                <AddIcon />
+                            </Fab>
+                            <span className={errors ? ("image" in errors ? classes.errors : "") : null}>
+                                {image ? image[0].name : "Ajouter une Image"}
+                            </span>
+                        </label>
+                        <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
+                            {loading ? <CircularProgress size={30} color="secondary" /> : "Ajouter un manga"}
+                        </Button>
+                    </form>
+                </Box>
+            </Head>
         );
     }
 }

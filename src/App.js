@@ -9,6 +9,7 @@ import * as ROUTES from "./constants/routes";
 import { withAuthentication } from "./components/Session";
 import Navbar from "./components/layouts/Navbar";
 import Home from "./pages/Home";
+import MangasList from "./pages/MangasList";
 import SignIn from "./components/auth/SignIn/";
 import SignUp from "./components/auth/Signup";
 import PasswordForgetPage from "./components/auth/PasswordForget";
@@ -19,24 +20,29 @@ import UploadManga from "./pages/UploadManga";
 import MangaListChapters from "./pages/MangaListChapters";
 import MangaReadChapter from "./pages/MangaReadChapter";
 
+// Material-ui
+import Container from "@material-ui/core/Container";
+
 const App = () => (
     <Router>
         <Navbar />
-        <Switch>
-            <Route exact path={ROUTES.HOME} component={Home} />
-            <Route exact path={ROUTES.LIST_MANGAS} />
-            <Route exact path={ROUTES.PLANNING} />
-            <Route exact path={ROUTES.SIGN_IN} component={SignIn} />
-            <Route exact path={ROUTES.SIGN_UP} component={SignUp} />
-            <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-            <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
-            <Route exact path={ROUTES.ADMIN} component={AdminPage} />
-            <Route exact path={ROUTES.UPLOAD_CHAPTER} component={UploadChapter} />
-            <Route exact path={ROUTES.UPLOAD_MANGA} component={UploadManga} />
+        <Container maxWidth="lg">
+            <Switch>
+                <Route exact path={ROUTES.HOME} component={Home} />
+                <Route exact path={ROUTES.LIST_MANGAS} component={MangasList} />
+                <Route exact path={ROUTES.PLANNING} />
+                <Route exact path={ROUTES.SIGN_IN} component={SignIn} />
+                <Route exact path={ROUTES.SIGN_UP} component={SignUp} />
+                <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+                <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
+                <Route exact path={ROUTES.ADMIN} component={AdminPage} />
+                <Route exact path={ROUTES.UPLOAD_CHAPTER} component={UploadChapter} />
+                <Route exact path={ROUTES.UPLOAD_MANGA} component={UploadManga} />
 
-            <Route exact path={ROUTES.LIST_MANGA_CHAPTERS} component={MangaListChapters} />
-            <Route exact path={ROUTES.READ_MANGA_CHAPTER} component={MangaReadChapter} />
-        </Switch>
+                <Route exact path={ROUTES.LIST_MANGA_CHAPTERS} component={MangaListChapters} />
+                <Route exact path={ROUTES.READ_MANGA_CHAPTER} component={MangaReadChapter} />
+            </Switch>
+        </Container>
     </Router>
 );
 

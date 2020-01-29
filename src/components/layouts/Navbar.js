@@ -30,18 +30,21 @@ const styles = (theme) => ({
         }
     },
     container: {
-        background: "#1E242C"
-    },
-    menu: {
-        width: "1325px",
-        margin: "0 auto",
-
-        "& a": {
+        background: "#1E242C",
+        "& *": {
             color: "#fff"
         }
     },
-    addButton: {
-        color: "#fff"
+    menu: {
+        width: "1325px",
+        margin: "0 auto"
+    },
+    fab: {
+        background: "transparent",
+        boxShadow: "none",
+        "&:hover": {
+            background: "transparent"
+        }
     }
 });
 class Navbar extends Component {
@@ -96,7 +99,7 @@ class Navbar extends Component {
                                         <Box display="flex">
                                             {!!authUser.roles[ROLES.ADMIN] && (
                                                 <Box>
-                                                    <Fab onClick={this.handleClick} size="small" color="primary">
+                                                    <Fab className={classes.fab} onClick={this.handleClick} size="small" color="primary">
                                                         <AddIcon />
                                                     </Fab>
                                                     <Menu

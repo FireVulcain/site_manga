@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import MangaInfo from "../components/mangas/MangaInfo";
-import { Redirect } from "react-router";
+import * as ROUTES from "./../constants/routes";
 
 import { withFirebase } from "./../config/Firebase";
 
@@ -10,11 +10,14 @@ import { withFirebase } from "./../config/Firebase";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const styles = {};
+const styles = {
+    noChapter: {
+        color: "#fff"
+    }
+};
 
 class MangaListChapters extends Component {
     constructor(props) {
@@ -23,8 +26,7 @@ class MangaListChapters extends Component {
             mangaId: this.props.match.params.manga_name,
             mangaInfo: [],
             listChapters: [],
-            loading: true,
-            wrongSearchManga: false
+            loading: true
         };
     }
     componentDidMount() {
@@ -56,51 +58,50 @@ class MangaListChapters extends Component {
                             });
                     });
                 } else {
-                    return this.setState({ wrongSearchManga: !results.exists });
+                    return this.props.history.push(ROUTES.HOME);
                 }
             });
     }
     render() {
+        const { listChapters } = this.state;
+        const { classes } = this.props;
         return (
             <Box className="main">
-                <Container maxWidth="lg">
-                    <Grid item md={12}>
-                        <Typography variant="h5" component="h3" className="titlePage">
-                            Liste des chapitres
-                        </Typography>
+                <Grid item md={12}>
+                    <Typography variant="h5" component="h3" className="titlePage">
+                        Liste des chapitres
+                    </Typography>
+                </Grid>
+                <Grid container spacing={5}>
+                    <Grid item md={8} className="containerInfo">
+                        {this.state.loading ? (
+                            <CircularProgress size={30} className="loadingInfo" />
+                        ) : Object.entries(listChapters).length === 0 ? (
+                            <Typography variant="body1" component="p" className={classes.noChapter}>
+                                Pas de chapitres encore disponibles sur le site
+                            </Typography>
+                        ) : (
+                            Object.values(this.state.listChapters).map((listChapter, i) => {
+                                return (
+                                    <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className="newChapter">
+                                        <img src={listChapter.mangaImage} alt="" className="newChapterImg" />
+                                        <Box>
+                                            <Typography variant="body1" component="p">
+                                                {listChapter.title} {listChapter.chapter}
+                                            </Typography>
+                                            <Typography variant="body1" component="p">
+                                                {listChapter.titleChapter}
+                                            </Typography>
+                                        </Box>
+                                    </Link>
+                                );
+                            })
+                        )}
                     </Grid>
-
-                    {this.state.wrongSearchManga ? (
-                        <Redirect to="/" />
-                    ) : (
-                        <Grid container spacing={5}>
-                            <Grid item md={8} className="containerInfo">
-                                {this.state.loading ? (
-                                    <CircularProgress size={30} className="loadingInfo" />
-                                ) : (
-                                    Object.values(this.state.listChapters).map((listChapter, i) => {
-                                        return (
-                                            <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className="newChapter">
-                                                <img src={listChapter.mangaImage} alt="" className="newChapterImg" />
-                                                <Box>
-                                                    <Typography variant="body1" component="p">
-                                                        {listChapter.title} {listChapter.chapter}
-                                                    </Typography>
-                                                    <Typography variant="body1" component="p">
-                                                        {listChapter.titleChapter}
-                                                    </Typography>
-                                                </Box>
-                                            </Link>
-                                        );
-                                    })
-                                )}
-                            </Grid>
-                            <Grid item md={4}>
-                                <MangaInfo mangaInfo={this.state.mangaInfo} />
-                            </Grid>
-                        </Grid>
-                    )}
-                </Container>
+                    <Grid item md={4}>
+                        <MangaInfo mangaInfo={this.state.mangaInfo} />
+                    </Grid>
+                </Grid>
             </Box>
         );
     }

@@ -35,7 +35,6 @@ const styles = {
 };
 const INITIAL_STATE = {
     manga_name: "",
-    nb_chapter: "",
     synopsis: "",
     image: null,
     loading: false,
@@ -60,7 +59,6 @@ class UploadManga extends Component {
 
     handleValidation = () => {
         let manga_name = this.state.manga_name;
-        let nb_chapter = this.state.nb_chapter;
         let synopsis = this.state.synopsis;
         let image = this.state.image;
         let errors = {};
@@ -69,13 +67,6 @@ class UploadManga extends Component {
         if (!manga_name) {
             formIsValid = false;
             errors["manga_name"] = "Champ obligatoire";
-        }
-        if (!nb_chapter) {
-            formIsValid = false;
-            errors["nb_chapter"] = "Champ obligatoire";
-        } else if (isNaN(nb_chapter)) {
-            formIsValid = false;
-            errors["nb_chapter"] = "Chiffres uniquement";
         }
 
         if (!synopsis) {
@@ -107,7 +98,7 @@ class UploadManga extends Component {
         let data = {
             resume: this.state.synopsis,
             title: this.state.manga_name,
-            totalChapter: this.state.nb_chapter,
+            lastChapter: 0,
             mangaImage: ""
         };
         this.setState({ loading: true });
@@ -136,7 +127,7 @@ class UploadManga extends Component {
 
     render() {
         const { classes } = this.props;
-        const { manga_name, nb_chapter, synopsis, image, errors, loading } = this.state;
+        const { manga_name, synopsis, image, errors, loading } = this.state;
         return (
             <Box className="main">
                 <form className="formAdd" noValidate autoComplete="off">
@@ -147,15 +138,6 @@ class UploadManga extends Component {
                         label="Nom du Manga"
                         error={errors ? !!("manga_name" in errors) : false}
                         helperText={errors ? ("manga_name" in errors ? errors["manga_name"] : "") : false}
-                    />
-                    <TextField
-                        onChange={this.handleChange}
-                        name="nb_chapter"
-                        value={nb_chapter}
-                        type="number"
-                        label="Nombre de chapitre"
-                        error={errors ? !!("nb_chapter" in errors) : false}
-                        helperText={errors ? ("nb_chapter" in errors ? errors["nb_chapter"] : "") : false}
                     />
                     <TextField
                         onChange={this.handleChange}

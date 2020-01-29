@@ -5,11 +5,19 @@ import * as ROUTES from "./../../../constants/routes";
 import * as ROLES from "./../../../constants/roles";
 import { withFirebase } from "./../../../config/Firebase";
 
+//Material-ui
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 const SignUpPage = () => (
-    <div>
-        <h1>SignUp</h1>
+    <Box className="logs_page">
+        <h1>Inscription</h1>
         <SignUpForm />
-    </div>
+    </Box>
 );
 const INITIAL_STATE = {
     username: "",
@@ -17,6 +25,7 @@ const INITIAL_STATE = {
     passwordOne: "",
     passwordTwo: "",
     isAdmin: false,
+    loading: false,
     error: null
 };
 class SignUpFormBase extends Component {
@@ -26,6 +35,7 @@ class SignUpFormBase extends Component {
         this.state = { ...INITIAL_STATE };
     }
     onSubmit = (event) => {
+        this.setState({ loading: true });
         const { username, email, passwordOne, passwordTwo, isAdmin } = this.state;
         const roles = {};
         if (isAdmin) {
@@ -63,51 +73,27 @@ class SignUpFormBase extends Component {
         this.setState({ [event.target.name]: event.target.checked });
     };
     render() {
-        const { username, email, passwordOne, passwordTwo, error, isAdmin } = this.state;
-        const isInvalid =
-            passwordOne !== passwordTwo || passwordOne === "" || email === "" || username === "";
+        const { username, email, passwordOne, passwordTwo, error, isAdmin, loading } = this.state;
+        const isInvalid = passwordOne !== passwordTwo || passwordOne === "" || email === "" || username === "";
         return (
             <form onSubmit={this.onSubmit}>
-                <input
-                    name="username"
-                    value={username}
+                <TextField onChange={this.onChange} label="Pseudo" value={username} name="username"></TextField>
+                <TextField onChange={this.onChange} label="Adresse email" type="email" value={email} name="email"></TextField>
+                <TextField onChange={this.onChange} label="Mot de passe" type="password" value={passwordOne} name="passwordOne"></TextField>
+                <TextField
                     onChange={this.onChange}
-                    type="text"
-                    placeholder="Full Name"
-                />
-                <input
-                    name="email"
-                    value={email}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Email Address"
-                />
-                <input
-                    name="passwordOne"
-                    value={passwordOne}
-                    onChange={this.onChange}
+                    label="Confirmation du mot de passe"
                     type="password"
-                    placeholder="Password"
-                />
-                <input
-                    name="passwordTwo"
                     value={passwordTwo}
-                    onChange={this.onChange}
-                    type="password"
-                    placeholder="Confirm Password"
+                    name="passwordTwo"
+                ></TextField>
+                <FormControlLabel
+                    control={<Checkbox name="isAdmin" checked={isAdmin} onChange={this.onChangeCheckbox} color="primary" />}
+                    label="Admin"
                 />
-                <label>
-                    Admin:
-                    <input
-                        name="isAdmin"
-                        type="checkbox"
-                        checked={isAdmin}
-                        onChange={this.onChangeCheckbox}
-                    />
-                </label>
-                <button disabled={isInvalid} type="submit">
-                    Sign Up
-                </button>
+                <Button type="submit" disabled={isInvalid} variant="contained" color="primary">
+                    {loading ? <CircularProgress size={30} /> : "Inscription"}
+                </Button>
                 {error && <p>{error.message}</p>}
             </form>
         );
@@ -115,7 +101,7 @@ class SignUpFormBase extends Component {
 }
 const SignUpLink = () => (
     <p>
-        Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+        <Link to={ROUTES.SIGN_UP}>Toujours pas inscrit ? Rejoignez-nous !</Link>
     </p>
 );
 const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);

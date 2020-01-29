@@ -13,7 +13,9 @@ import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
@@ -42,6 +44,11 @@ const styles = {
     },
     errors: {
         color: "#f44336"
+    },
+    checkbox: {
+        "& svg": {
+            color: "#fff"
+        }
     }
 };
 const INITIAL_STATE = {
@@ -50,6 +57,7 @@ const INITIAL_STATE = {
     selectManga: "",
     selectChapter: "",
     selectTitle: "",
+    isLastChapter: false,
     loading: false,
     errors: null
 };
@@ -70,6 +78,9 @@ class UploadChapter extends Component {
     };
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
+    };
+    handleChecked = (e) => {
+        this.setState({ [e.target.value]: e.target.checked });
     };
 
     handleValidation = () => {
@@ -140,6 +151,12 @@ class UploadChapter extends Component {
                         pageCount: this.state.url.length,
                         pages: this.state.url,
                         createdAt: new Date()
+                    })
+                    .then(() => {
+                        if (this.state.isLastChapter) {
+                            const mangaRef = firestore.collection("mangas").doc(this.state.selectManga);
+                            mangaRef.update({ lastChapter: parseInt(this.state.selectChapter) });
+                        }
                     })
                     .then(() => {
                         this.setState({ ...INITIAL_STATE });
@@ -224,6 +241,12 @@ class UploadChapter extends Component {
                             {images ? images.length + " fichiers" : "Ajouter des images"}
                         </span>
                     </label>
+
+                    <FormControlLabel
+                        control={<Checkbox className={classes.checkbox} onChange={this.handleChecked} value="isLastChapter" color="primary" />}
+                        label="Définir comme chapitre le plus récent"
+                    />
+
                     <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
                         {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
                     </Button>

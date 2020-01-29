@@ -2,6 +2,7 @@ body {
     background: #252834;
     overflow-x: hidden;
 }
+
 .App {
     text-align: center;
 }
@@ -57,7 +58,8 @@ body {
 .newChapterImg {
     border-radius: 100px;
     margin-right: 15px;
-    max-width: 65px;
+    width: 65px;
+    height: 65px;
 }
 body .titlePage {
     color: #fff;
@@ -73,7 +75,7 @@ body .titlePage {
 }
 
 /* FORM */
-.formAdd {
+form {
     display: flex;
     flex-direction: column;
     max-width: 900px;
@@ -91,6 +93,9 @@ body .titlePage {
     background: #3672bf;
 }
 
+.logs_page form label,
+.logs_page form input,
+.logs_page form textarea,
 .formAdd label,
 .formAdd input,
 .formAdd textarea {
@@ -99,6 +104,29 @@ body .titlePage {
 .formAdd input:focus,
 .formAdd textarea:focus {
     color: #3f51b5;
+}
+
+.logs_page form button {
+    margin-top: 20px;
+    padding: 15px;
+}
+.logs_page form button.Mui-disabled span {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Page de connexion / inscription */
+.logs_page * {
+    color: #fff;
+}
+.logs_page h1 {
+    text-align: center;
+}
+.logs_page p {
+    max-width: 1000px;
+    margin: 20px auto 0;
+}
+.logs_page p a {
+    text-decoration: none;
 }
 
 @keyframes App-logo-spin {

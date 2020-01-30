@@ -37,7 +37,9 @@ const styles = (theme) => ({
     },
     menu: {
         width: "1325px",
-        margin: "0 auto"
+        margin: "0 auto",
+        postition: "relative",
+        minHeight: "70px"
     },
     fab: {
         background: "transparent",
@@ -45,6 +47,15 @@ const styles = (theme) => ({
         "&:hover": {
             background: "transparent"
         }
+    },
+    logo: {
+        display: "inline-block",
+        width: "95px",
+        height: "80px",
+        position: "absolute",
+        top: "0",
+        background: `url(${logo}) no-repeat`,
+        backgroundSize: "contain"
     }
 });
 class Navbar extends Component {
@@ -69,10 +80,8 @@ class Navbar extends Component {
                     return (
                         <Box className={classes.container}>
                             <Grid container alignItems="center" className={classes.menu}>
-                                <Grid item md={2}>
-                                    <Link to={ROUTES.HOME}>
-                                        <img src={logo} alt="logo" />
-                                    </Link>
+                                <Grid item md={1}>
+                                    <Link to={ROUTES.HOME} className={classes.logo}></Link>
                                 </Grid>
                                 <Grid container justify="space-between" item md={10}>
                                     <Box className={classes.root}>

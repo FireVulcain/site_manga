@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Head from "./../components/layouts/Head";
 import * as ROUTES from "./../constants/routes";
+import ScrollTop from "../components/helpers/ScrollTop";
 
 import Img from "react-image";
 
@@ -12,6 +13,9 @@ import { withFirebase } from "./../config/Firebase";
 import { withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Fab from "@material-ui/core/Fab";
+import Toolbar from "@material-ui/core/Toolbar";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const styles = {
     page: {
@@ -21,6 +25,7 @@ const styles = {
         marginBottom: "20px"
     }
 };
+
 class MangaReadChapter extends Component {
     constructor(props) {
         super(props);
@@ -70,6 +75,7 @@ class MangaReadChapter extends Component {
         const { classes } = this.props;
         return (
             <Head pageMeta={{ title: "Chapitre " + nbChapter + " de " + titleChapter + " | ScanNation France" }}>
+                <Toolbar id="back-to-top-anchor" />
                 <Box>
                     {Object.values(this.state.chapterData).map((datas) => {
                         return datas.pages.map((page, i) => {
@@ -81,6 +87,11 @@ class MangaReadChapter extends Component {
                         });
                     })}
                 </Box>
+                <ScrollTop>
+                    <Fab size="medium" aria-label="scroll back to top">
+                        <KeyboardArrowUpIcon />
+                    </Fab>
+                </ScrollTop>
             </Head>
         );
     }

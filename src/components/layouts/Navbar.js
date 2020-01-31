@@ -31,14 +31,16 @@ const styles = (theme) => ({
     },
     container: {
         background: "#1E242C",
+        borderBottom: "1px solid rgb(75, 93, 115)",
         "& *": {
             color: "#fff"
         }
     },
     menu: {
-        width: "1325px",
+        maxWidth: "1325px",
+        width: "100%",
         margin: "0 auto",
-        postition: "relative",
+        position: "relative",
         minHeight: "70px"
     },
     fab: {

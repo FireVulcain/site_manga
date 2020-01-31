@@ -9,6 +9,7 @@ import * as ROUTES from "./constants/routes";
 import { withAuthentication } from "./components/Session";
 import Navbar from "./components/layouts/Navbar";
 import Home from "./pages/Home";
+import Planning from "./pages/Planning";
 import MangasList from "./pages/MangasList";
 import SignIn from "./components/auth/SignIn/";
 import SignUp from "./components/auth/Signup";
@@ -30,7 +31,7 @@ const App = () => (
             <Switch>
                 <Route exact path={ROUTES.HOME} component={Home} />
                 <Route exact path={ROUTES.LIST_MANGAS} component={MangasList} />
-                <Route exact path={ROUTES.PLANNING} />
+                <Route exact path={ROUTES.PLANNING} component={Planning} />
                 <Route exact path={ROUTES.SIGN_IN} component={SignIn} />
                 <Route exact path={ROUTES.SIGN_UP} component={SignUp} />
                 <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />

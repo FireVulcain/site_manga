@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ScrollTop = (props) => {
     const { children } = props;
-    console.log(children);
     const classes = useStyles();
 
     const trigger = useScrollTrigger({

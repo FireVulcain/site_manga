@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { compose } from "recompose";
-import { withAuthorization } from "./../components/Session";
-import * as ROLES from "./../constants/roles";
-import Head from "./../components/layouts/Head";
+import { withAuthorization } from "../../components/Session";
+import * as ROLES from "../../constants/roles";
+import Head from "../../components/layouts/Head";
 
 // firebase
-import { withFirebase } from "./../config/Firebase";
+import { withFirebase } from "../../config/Firebase";
 
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";

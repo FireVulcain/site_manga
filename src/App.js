@@ -16,10 +16,12 @@ import SignUp from "./components/auth/Signup";
 import PasswordForgetPage from "./components/auth/PasswordForget";
 import AccountPage from "./components/auth/Account";
 import AdminPage from "./components/Admin";
-import UploadChapter from "./pages/UploadChapter";
-import UploadManga from "./pages/UploadManga";
+import UploadChapter from "./pages/upload/UploadChapter";
+import UploadManga from "./pages/upload/UploadManga";
+import UploadPlanning from "./pages/upload/UploadPlanning";
 import MangaListChapters from "./pages/MangaListChapters";
 import MangaReadChapter from "./pages/MangaReadChapter";
+import DeleteData from "./pages/delete/DeleteData";
 
 // Material-ui
 import Container from "@material-ui/core/Container";
@@ -39,6 +41,8 @@ const App = () => (
                 <Route exact path={ROUTES.ADMIN} component={AdminPage} />
                 <Route exact path={ROUTES.UPLOAD_CHAPTER} component={UploadChapter} />
                 <Route exact path={ROUTES.UPLOAD_MANGA} component={UploadManga} />
+                <Route exact path={ROUTES.UPLOAD_PLANNING} component={UploadPlanning} />
+                <Route exact path={ROUTES.DELETE_DATA} component={DeleteData} />
 
                 <Route exact path={ROUTES.LIST_MANGA_CHAPTERS} component={MangaListChapters} />
                 <Route exact path={ROUTES.READ_MANGA_CHAPTER} component={MangaReadChapter} />

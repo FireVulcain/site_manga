@@ -35,26 +35,29 @@ class LastestRelease extends Component {
                     results.forEach((doc) => {
                         mangas[doc.id] = doc.data();
                     });
-                    firestore
-                        .collection("/chapters")
-                        .limit(20)
-                        .orderBy("createdAt", "desc")
-                        .get()
-                        .then((docSnaps) => {
-                            if (!docSnaps.empty) {
-                                docSnaps.forEach((doc) => {
-                                    chapters[doc.id] = doc.data();
-                                    chapters[doc.id].title = mangas[doc.data().mangaId].title;
-                                    chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
-                                });
-                                this.setState({ releases: chapters, loading: false });
-                            } else {
-                                this.setState({ noManga: docSnaps.empty, loading: false });
-                            }
-                        });
                 } else {
                     this.setState({ noManga: results.empty });
+                    return;
                 }
+            })
+            .then(() => {
+                firestore
+                    .collection("/chapters")
+                    .limit(20)
+                    .orderBy("createdAt", "desc")
+                    .get()
+                    .then((docSnaps) => {
+                        if (!docSnaps.empty) {
+                            docSnaps.forEach((doc) => {
+                                chapters[doc.id] = doc.data();
+                                chapters[doc.id].title = mangas[doc.data().mangaId].title;
+                                chapters[doc.id].mangaImage = mangas[doc.data().mangaId].mangaImage;
+                            });
+                            this.setState({ releases: chapters, loading: false });
+                        } else {
+                            this.setState({ noManga: docSnaps.empty, loading: false });
+                        }
+                    });
             });
     };
 

@@ -11,7 +11,7 @@ class Home extends Component {
     render() {
         return (
             <Head pageMeta={{ title: "ScanNation France | Scans de manga en ligne" }}>
-                <Grid container className="main">
+                <Grid container className="main" spacing={3}>
                     <Grid item md={12}>
                         <LastestRelease />
                     </Grid>

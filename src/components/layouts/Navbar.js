@@ -20,6 +20,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 //img
 import logo from "./../../assets/images/logo.png";
 
@@ -58,6 +59,10 @@ const styles = (theme) => ({
         top: "0",
         background: `url(${logo}) no-repeat`,
         backgroundSize: "contain"
+    },
+    editButton: {
+        verticalAlign: "middle",
+        marginRight: "5px"
     }
 });
 class Navbar extends Component {
@@ -110,6 +115,9 @@ class Navbar extends Component {
                                         <Box display="flex">
                                             {!!authUser.roles[ROLES.ADMIN] && (
                                                 <Box>
+                                                    <Link className={classes.editButton} to={ROUTES.DELETE_DATA}>
+                                                        <EditIcon />
+                                                    </Link>
                                                     <Fab className={classes.fab} onClick={this.handleClick} size="small" color="primary">
                                                         <AddIcon />
                                                     </Fab>
@@ -128,6 +136,9 @@ class Navbar extends Component {
                                                         </MenuItem>
                                                         <MenuItem component={Link} to={ROUTES.UPLOAD_CHAPTER} onClick={this.handleClose}>
                                                             Chapitre
+                                                        </MenuItem>
+                                                        <MenuItem component={Link} to={ROUTES.UPLOAD_PLANNING} onClick={this.handleClose}>
+                                                            Planning
                                                         </MenuItem>
                                                     </Menu>
                                                 </Box>

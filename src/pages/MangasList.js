@@ -56,7 +56,7 @@ class MangasList extends Component {
                                                 {manga[1].title}
                                             </Typography>
                                             <Typography variant="body1" component="span">
-                                                {manga[1].lastChapter === 0 ? "À venir" : "Dernier chapitre :" + manga[1].lastChapter}
+                                                {manga[1].lastChapter === 0 ? "À venir" : "Dernier chapitre : " + manga[1].lastChapter}
                                             </Typography>
                                         </Box>
                                     </Link>

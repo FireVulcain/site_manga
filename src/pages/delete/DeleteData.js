@@ -37,54 +37,86 @@ class DeleteData extends Component {
         super(props);
         this.state = {
             mangas: {},
-            loading: true,
-            error: null
+            loading: true
         };
     }
     displayChapters = (id) => {
         //[id] => Faire apparaitre / disparaitre les chapitres du manga
         this.setState({ [id]: !this.state[id] });
     };
-    handleDeleteChapter = (id) => {
-        const firestore = this.props.firebase.firestore;
-        firestore
-            .collection("chapters")
-            .doc(id)
-            .delete()
-            .then(() => {
-                //[id] => Faire disparaitre le chapitre après supression
-                this.setState({ [id]: true });
-            })
-            .catch((error) => {
-                this.setState({ error: error });
+
+    removeChapterImg = (chapterInfo) => {
+        const storage = this.props.firebase.storage;
+
+        return storage
+            .ref()
+            .child(`/${chapterInfo.mangaId}/${chapterInfo.chapter}/`)
+            .listAll()
+            .then((data) => {
+                data.items.forEach((fileRef) => {
+                    fileRef.delete();
+                });
             });
     };
-    handleDeleteManga = (id, i) => {
+    removeMangaImg = (mangaId) => {
+        const storage = this.props.firebase.storage;
+
+        return storage
+            .ref()
+            .child(`/${mangaId}/`)
+            .listAll()
+            .then((data) => {
+                data.items.forEach((fileRef) => {
+                    fileRef.delete();
+                });
+            });
+    };
+
+    handleDeleteChapter = (chapterInfo) => {
+        const firestore = this.props.firebase.firestore;
+
+        firestore
+            .collection("chapters")
+            .doc(chapterInfo.id)
+            .delete()
+            .then(() => {
+                this.removeChapterImg(chapterInfo);
+            })
+            .then(() => {
+                //[chapterInfo.id] => Faire disparaitre le chapitre après supression
+                this.setState({ [chapterInfo.id]: true });
+            });
+    };
+    handleDeleteManga = (mangaInfo, i) => {
         const firestore = this.props.firebase.firestore;
         firestore
             .collection("chapters")
-            .where("mangaId", "==", id)
+            .where("mangaId", "==", mangaInfo.id)
             .get()
             .then((snapshot) => {
                 snapshot.forEach((doc) => {
+                    this.removeChapterImg(doc.data());
                     doc.ref.delete();
                 });
             })
             .then(() => {
                 firestore
                     .collection("mangas")
-                    .doc(id)
+                    .doc(mangaInfo.id)
                     .delete()
                     .then(() => {
-                        //[i] => Faire disparaitre le manga / [id] => Faire disparaitre les chapitres après supression
-                        this.setState({ [i]: !this.state[i], [id]: false });
+                        this.removeMangaImg(mangaInfo.id);
                     })
-                    .catch((error) => {
-                        this.setState({ error: error });
+                    .then(() => {
+                        firestore
+                            .collection("planning")
+                            .doc(mangaInfo.id)
+                            .delete()
+                            .then(() => {
+                                //[i] => Faire disparaitre le manga / [mangaInfo.id] => Faire disparaitre les chapitres après supression
+                                this.setState({ [i]: !this.state[i], [mangaInfo.id]: false });
+                            });
                     });
-            })
-            .catch((error) => {
-                this.setState({ error: error });
             });
     };
     componentDidMount = () => {
@@ -144,7 +176,7 @@ class DeleteData extends Component {
                                                 <IconButton
                                                     className={classes.deleteIcon}
                                                     component="span"
-                                                    onClick={() => this.handleDeleteManga(manga.id, i)}
+                                                    onClick={() => this.handleDeleteManga(manga, i)}
                                                 >
                                                     <DeleteForeverIcon />
                                                 </IconButton>
@@ -170,7 +202,7 @@ class DeleteData extends Component {
                                                             <IconButton
                                                                 className={classes.deleteIcon}
                                                                 component="span"
-                                                                onClick={() => this.handleDeleteChapter(list.id)}
+                                                                onClick={() => this.handleDeleteChapter(list)}
                                                             >
                                                                 <DeleteForeverIcon />
                                                             </IconButton>

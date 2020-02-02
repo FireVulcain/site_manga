@@ -71,6 +71,15 @@ class UploadChapter extends Component {
         };
     }
 
+    titleCase = (str) => {
+        let splitStr = str.toLowerCase().split(" ");
+        for (let i = 0; i < splitStr.length; i++) {
+            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+        }
+
+        return splitStr.join(" ");
+    };
+
     handleImage = (e) => {
         if (e.target.files[0]) {
             const images = e.target.files;
@@ -155,13 +164,32 @@ class UploadChapter extends Component {
                     })
                     .then(() => {
                         if (this.state.isLastChapter) {
-                            const mangaRef = firestore.collection("mangas").doc(this.state.selectManga);
-                            mangaRef.update({ lastChapter: parseInt(this.state.selectChapter) });
+                            firestore
+                                .collection("mangas")
+                                .doc(this.state.selectManga)
+                                .update({ lastChapter: parseInt(this.state.selectChapter) });
                         }
                     })
                     .then(() => {
-                        this.setState({ ...INITIAL_STATE });
-                        this.fileInput.value = "";
+                        const planningRef = firestore.collection("planning").doc(this.state.selectManga);
+
+                        planningRef
+                            .get()
+                            .then((docSnapshot) => {
+                                if (docSnapshot.exists) {
+                                    planningRef.update({ status: parseInt(0) });
+                                } else {
+                                    planningRef.set({
+                                        mangaId: this.state.selectManga,
+                                        status: 0,
+                                        mangaName: this.titleCase(this.state.selectManga.replace(/-/g, " "))
+                                    });
+                                }
+                            })
+                            .then(() => {
+                                this.setState({ ...INITIAL_STATE });
+                                this.fileInput.value = "";
+                            });
                     });
             });
         });

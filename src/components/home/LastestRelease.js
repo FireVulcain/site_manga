@@ -82,10 +82,10 @@ class LastestRelease extends Component {
                         ) : (
                             Object.values(this.state.releases).map((release, i) => {
                                 return (
-                                    <Link key={i} to={release.mangaId} className="newChapter">
+                                    <Link key={i} to={release.mangaId} className={i < 1 ? "newChapter recentChapter" : "newChapter notRecent"}>
                                         <img src={release.mangaImage} alt="" className="newChapterImg" />
                                         <Box>
-                                            <Typography variant="body1" component="p">
+                                            <Typography variant="body1" component="p" className="mangaTitle">
                                                 {release.title} {release.chapter}
                                             </Typography>
                                             <Typography variant="body1" component="p">

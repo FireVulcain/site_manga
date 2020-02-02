@@ -162,7 +162,7 @@ class UploadPlanning extends Component {
                         </FormControl>
                         <br />
                         <Button variant="contained" color="primary" startIcon={<CloudUploadIcon />} onClick={this.handleUpload}>
-                            {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Upload"}
+                            {this.state.loading ? <CircularProgress size={30} color="secondary" /> : "Ajouter un nouveau planning"}
                         </Button>
                     </form>
                 </Box>

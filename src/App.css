@@ -1,5 +1,6 @@
 body {
-    background: #252834;
+    /* background: #252834; */
+    background: #1c252d;
     overflow-x: hidden;
 }
 
@@ -42,19 +43,36 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    background: #3d485a;
     border-radius: 100px 5px 5px 100px;
     text-decoration: none;
+    background: #283440;
     color: #fff;
-    transition-duration: 0.2s;
     -webkit-border-radius: 100px 5px 5px 100px;
     -moz-border-radius: 100px 5px 5px 100px;
     -ms-border-radius: 100px 5px 5px 100px;
     -o-border-radius: 100px 5px 5px 100px;
 }
-.newChapter:hover {
-    background: #1e2834;
+.newChapter.recentChapter {
+    background: #34465b;
 }
+
+.newChapter.recentChapter .mangaTitle::before {
+    content: "";
+    display: inline-block;
+    margin-right: 5px;
+    background-position: -64px 0;
+    height: 14px;
+    width: 13px;
+    background: url("./assets/images/fire.svg");
+}
+
+.newChapter:hover {
+    background: #34465b;
+}
+.newChapter.recentChapter:hover {
+    background: #283440;
+}
+
 .newChapterImg {
     border-radius: 100px;
     margin-right: 15px;
@@ -75,6 +93,18 @@ body .titlePage {
 }
 
 /* FORM */
+form .MuiInput-underline:before {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+}
+form .MuiInput-underline:hover:not(.Mui-disabled):before {
+    border-bottom: 2px solid rgba(158, 210, 255, 0.5);
+}
+form .MuiInput-underline:after {
+    border-bottom: 2px solid rgb(158, 210, 255);
+}
+form .MuiFormLabel-root.Mui-focused {
+    color: rgb(158, 210, 255);
+}
 form {
     display: flex;
     flex-direction: column;
@@ -82,15 +112,21 @@ form {
     width: auto;
     padding: 34px 50px 50px;
     margin: 0 auto;
-    background: #1e242c;
+
+    background: #283440;
 }
-.formAdd .MuiButton-containedPrimary,
-.formAdd .MuiFab-primary {
-    background: #2b5b99;
+form .MuiButton-containedPrimary,
+form .MuiFab-primary {
+    background: rgb(158, 210, 255);
 }
-.formAdd .MuiButton-containedPrimary:hover,
-.formAdd .MuiFab-primary:hover {
-    background: #3672bf;
+form .MuiButton-containedPrimary:hover,
+form .MuiFab-primary:hover {
+    background: #8ebde6;
+}
+form .MuiFab-primary svg,
+form .MuiButton-containedPrimary .MuiButton-label,
+form .MuiFab-primary .MuiButton-label {
+    color: #283440;
 }
 
 .logs_page form label,
@@ -103,7 +139,7 @@ form {
 }
 .formAdd input:focus,
 .formAdd textarea:focus {
-    color: #3f51b5;
+    color: #8ebde6;
 }
 
 .logs_page form button {

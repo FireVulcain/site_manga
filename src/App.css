@@ -4,6 +4,10 @@ body {
     overflow-x: hidden;
 }
 
+body .MuiContainer-maxWidthLg {
+    max-width: 1400px;
+}
+
 .App {
     text-align: center;
 }

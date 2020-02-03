@@ -19,6 +19,7 @@ import AdminPage from "./components/Admin";
 import UploadChapter from "./pages/upload/UploadChapter";
 import UploadManga from "./pages/upload/UploadManga";
 import UploadPlanning from "./pages/upload/UploadPlanning";
+import UploadNews from "./pages/upload/UploadNews";
 import MangaListChapters from "./pages/MangaListChapters";
 import MangaReadChapter from "./pages/MangaReadChapter";
 import DeleteData from "./pages/delete/DeleteData";
@@ -42,6 +43,7 @@ const App = () => (
                 <Route exact path={ROUTES.UPLOAD_CHAPTER} component={UploadChapter} />
                 <Route exact path={ROUTES.UPLOAD_MANGA} component={UploadManga} />
                 <Route exact path={ROUTES.UPLOAD_PLANNING} component={UploadPlanning} />
+                <Route exact path={ROUTES.UPLOAD_NEWS} component={UploadNews} />
                 <Route exact path={ROUTES.DELETE_DATA} component={DeleteData} />
 
                 <Route exact path={ROUTES.LIST_MANGA_CHAPTERS} component={MangaListChapters} />

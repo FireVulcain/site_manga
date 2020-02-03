@@ -9,6 +9,7 @@ export const ADMIN = "/admin";
 export const UPLOAD_MANGA = "/upload/upload_manga";
 export const UPLOAD_CHAPTER = "/upload/upload_chapter";
 export const UPLOAD_PLANNING = "/upload/upload_planning";
+export const UPLOAD_NEWS = "/upload/upload_news";
 export const DELETE_DATA = "/delete/delete_data";
 
 export const LIST_MANGA_CHAPTERS = "/:manga_name";

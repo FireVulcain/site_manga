@@ -142,6 +142,9 @@ class Navbar extends Component {
                                                         <MenuItem component={Link} to={ROUTES.UPLOAD_PLANNING} onClick={this.handleClose}>
                                                             Planning
                                                         </MenuItem>
+                                                        <MenuItem component={Link} to={ROUTES.UPLOAD_NEWS} onClick={this.handleClose}>
+                                                            Actualités
+                                                        </MenuItem>
                                                     </Menu>
                                                 </Box>
                                             )}

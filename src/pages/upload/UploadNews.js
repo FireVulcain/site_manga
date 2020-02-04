@@ -74,7 +74,6 @@ class UploadNews extends Component {
             });
     };
     render() {
-        const { classes } = this.props;
         const { loading, errors, title, actu_info } = this.state;
         return (
             <Head pageMeta={{ title: "Ajouter une actualité | ScanNation France " }}>

@@ -82,6 +82,10 @@ body .MuiContainer-maxWidthLg {
     margin-right: 15px;
     width: 65px;
     height: 65px;
+    overflow: hidden;
+}
+.newChapterImg img {
+    width: 65px;
 }
 body .titlePage {
     color: #fff;

@@ -164,7 +164,9 @@ class DeleteData extends Component {
                                         {/* Collapse pour la suppression de manga */}
                                         <Collapse in={!this.state[i]} timeout="auto" unmountOnExit>
                                             <Box className="newChapter">
-                                                <img src={manga.mangaImage} alt="" className="newChapterImg" />
+                                                <Box className="newChapterImg">
+                                                    <img src={manga.mangaImage} alt="" />
+                                                </Box>
                                                 <Box>
                                                     <Typography variant="body1" component="p">
                                                         {manga.title}
@@ -190,7 +192,9 @@ class DeleteData extends Component {
                                                     // Collapse pour la suppression de chapitre
                                                     <Collapse in={!this.state[list.id]} key={index}>
                                                         <Box className="newChapter">
-                                                            <img src={manga.mangaImage} alt="" className="newChapterImg" />
+                                                            <Box className="newChapterImg">
+                                                                <img src={manga.mangaImage} alt="" />
+                                                            </Box>
                                                             <Box>
                                                                 <Typography variant="body1" component="p">
                                                                     {list.title} {list.chapter}

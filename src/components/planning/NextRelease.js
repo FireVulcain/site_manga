@@ -123,7 +123,10 @@ class NextRelease extends Component {
                             }
                             return (
                                 <Link key={i} to={planing.mangaId} className="newChapter">
-                                    <img src={planing.mangaImage} alt="" className="newChapterImg" />
+                                    <Box className="newChapterImg">
+                                        <img src={planing.mangaImage} alt="" />
+                                    </Box>
+
                                     <Box>
                                         <Typography className={classes.progressName} variant="body1" component="p">
                                             {planing.mangaName} : <span className={classStatus}>{currentStatus}</span>

@@ -87,7 +87,9 @@ class MangaListChapters extends Component {
                                 Object.values(this.state.listChapters).map((listChapter, i) => {
                                     return (
                                         <Link key={i} to={listChapter.mangaId + "/" + listChapter.chapter} className="newChapter">
-                                            <img src={listChapter.mangaImage} alt="" className="newChapterImg" />
+                                            <Box className="newChapterImg">
+                                                <img src={listChapter.mangaImage} alt="" />
+                                            </Box>
                                             <Box>
                                                 <Typography variant="body1" component="p">
                                                     {listChapter.title} {listChapter.chapter}

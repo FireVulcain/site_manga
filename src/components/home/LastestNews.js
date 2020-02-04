@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 // Firebase
@@ -55,6 +54,8 @@ class LastestNews extends Component {
         let news = {};
         firestore
             .collection("/news")
+            .limit(3)
+            .orderBy("date", "desc")
             .get()
             .then((results) => {
                 if (!results.empty) {

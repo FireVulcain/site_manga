@@ -75,6 +75,7 @@ class NextRelease extends Component {
             .then(() => {
                 firestore
                     .collection("/planning")
+                    .orderBy("mangaName")
                     .get()
                     .then((results) => {
                         results.forEach((doc) => {

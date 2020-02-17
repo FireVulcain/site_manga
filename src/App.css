@@ -91,6 +91,7 @@ body .titlePage {
     color: #fff;
     margin: 1em 0;
     text-transform: uppercase;
+    font-size: 24px;
 }
 .containerInfo {
     position: relative;

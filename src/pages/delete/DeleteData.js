@@ -133,6 +133,7 @@ class DeleteData extends Component {
                     mangas[doc.id].listChapter = [];
                     return firestore
                         .collection("chapters")
+                        .orderBy("chapter", "desc")
                         .get()
                         .then((snapshot) => {
                             snapshot.forEach((doc) => {

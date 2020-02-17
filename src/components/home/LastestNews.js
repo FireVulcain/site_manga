@@ -54,7 +54,7 @@ class LastestNews extends Component {
         let news = {};
         firestore
             .collection("/news")
-            .limit(3)
+            .limit(4)
             .orderBy("date", "desc")
             .get()
             .then((results) => {

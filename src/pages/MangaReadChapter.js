@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Head from "./../components/layouts/Head";
 import * as ROUTES from "./../constants/routes";
@@ -12,17 +13,34 @@ import { withFirebase } from "./../config/Firebase";
 //Material-ui
 import { withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
 import Toolbar from "@material-ui/core/Toolbar";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 
 const styles = {
+    container: {
+        maxWidth: "975px",
+        margin: "0 auto",
+        "& a, & a:hover": {
+            background: "transparent",
+            boxShadow: "none",
+            color: "#fff",
+            paddingLeft: "0",
+            paddingBottom: "20px"
+        }
+    },
     page: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: "20px"
+        marginBottom: "20px",
+
+        "& img": {
+            width: "100%"
+        }
     }
 };
 
@@ -73,10 +91,20 @@ class MangaReadChapter extends Component {
     render() {
         const { titleChapter, nbChapter } = this.state;
         const { classes } = this.props;
+        console.log(this.props);
         return (
             <Head pageMeta={{ title: "Chapitre " + nbChapter + " de " + titleChapter + " | ScanNation France" }}>
                 <Toolbar id="back-to-top-anchor" />
-                <Box>
+                <Box className={classes.container}>
+                    <Button
+                        variant="contained"
+                        className={classes.button}
+                        startIcon={<KeyboardBackspace />}
+                        component={Link}
+                        to={"/" + this.props.match.params.manga_name}
+                    >
+                        Liste des chapitres
+                    </Button>
                     {Object.values(this.state.chapterData).map((datas) => {
                         return datas.pages.map((page, i) => {
                             return (

@@ -31,12 +31,14 @@ const styles = (theme) => ({
         }
     },
     container: {
-        // background: "#1E242C",
-        // borderBottom: "1px solid rgb(75, 93, 115)",
         background: "#1c252d",
         boxShadow: "0 2px 4px -1px rgba(0,0,0,0.34),0 2px 2px -2px rgba(0,0,0,0.26),0 1px 4px 0 rgba(0,0,0,0.28)",
         "& *": {
-            color: "#fff"
+            color: "#fff",
+            textTransform: "none"
+        },
+        "& a, & button": {
+            fontSize: "18px"
         }
     },
     menu: {

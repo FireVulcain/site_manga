@@ -28,7 +28,7 @@ import DeleteData from "./pages/delete/DeleteData";
 import Container from "@material-ui/core/Container";
 
 const App = () => (
-    <Router basename={"projects/scannation"}>
+    <Router>
         <Navbar />
         <Container maxWidth="lg">
             <Switch>

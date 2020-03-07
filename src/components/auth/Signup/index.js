@@ -91,10 +91,10 @@ class SignUpFormBase extends Component {
                     value={passwordTwo}
                     name="passwordTwo"
                 ></TextField>
-                <FormControlLabel
+                {/* <FormControlLabel
                     control={<Checkbox name="isAdmin" checked={isAdmin} onChange={this.onChangeCheckbox} color="primary" />}
                     label="Admin"
-                />
+                /> */}
                 <Button type="submit" disabled={isInvalid} variant="contained" color="primary">
                     {loading ? <CircularProgress size={30} /> : "Inscription"}
                 </Button>

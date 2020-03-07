@@ -1,6 +1,5 @@
 {
     "name": "manga_trad",
-    "homepage": "/projects/scannation",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
